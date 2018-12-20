@@ -1,11 +1,8 @@
 # Interactive Elixir AST explorer
 
-> **WORK IN PROGRESS**
+Type some Elixir(ish) code, have it parsed by the Elixir parsed, and
+inspect the output in real time. Like
+[Code.string_to_quoted/2](https://hexdocs.pm/elixir/Code.html#string_to_quoted/2),
+but in a browser.
 
-To start your Phoenix server:
-
-  * Install dependencies with `mix deps.get`
-  * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
-
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Demo: https://astexplorer.apps.miraclethings.nl/
