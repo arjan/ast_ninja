@@ -6,6 +6,8 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
+    "ansi-to-react": "^4.0.0-alpha.0",
+    "lodash": "^4.17.11",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "react": "^16.7.0",
@@ -13,6 +15,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.2.1",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.0",

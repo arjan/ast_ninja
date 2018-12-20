@@ -1,2 +1,19 @@
-body {
+html, body, #root {
+  margin: 0; padding: 0; height: 100%;
+}
+
+.explorer--wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  textarea {
+    flex: 1;
+  }
+  > div.output {
+    flex: 1;
+    padding: 12px;
+    white-space: pre;
+    font-family: monospace;
+  }
 }
