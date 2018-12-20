@@ -21,7 +21,7 @@ defmodule AstExplorerWeb.Channels.ParserChannel do
     {:reply, {:ok, response}, socket}
   end
 
-  @colors [number: :red, atom: :blue, atom: :blue, map: :green, list: :green]
+  @colors [number: :red, atom: :blue, map: :darkgreen, string: :green]
   def pretty_ast(code) do
     with {:ok, ast} <- Code.string_to_quoted(code) do
       json_safe = inspect(ast, width: 40, pretty: true, syntax_colors: @colors)
