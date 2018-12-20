@@ -25,7 +25,14 @@ html, body, #root {
   > #editor {
     height: 100% !important;
   }
-  > div.output {
+
+  .error {
+    padding: 4px;
+    background: red;
+    color: white;
+  }
+
+  div.output {
     flex: 1;
     padding: 12px;
     white-space: pre;

@@ -8,8 +8,17 @@ defmodule AstExplorerWeb.Channels.ParserChannel do
 
   def handle_in("parse", %{"code" => code}, socket) do
     IO.inspect(code, label: "code")
-    {:ok, pretty} = pretty_ast(code)
-    {:reply, {:ok, %{pretty: pretty}}, socket}
+
+    response =
+      case pretty_ast(code) do
+        {:ok, pretty} ->
+          %{pretty: pretty}
+
+        {:error, {line, message, _}} ->
+          %{error: %{line: line, message: message}}
+      end
+
+    {:reply, {:ok, response}, socket}
   end
 
   @colors [number: :red, atom: :blue, atom: :blue, map: :green, list: :green]

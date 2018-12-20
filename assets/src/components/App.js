@@ -10,15 +10,19 @@ import 'brace/theme/github'
 export default class Component extends React.Component {
   state = {
     code: '',
-    pretty: ''
+    pretty: '',
+    error: null
   }
 
   update = debounce(() => {
     const { code } = this.state
-    channel.push('parse', { code }).receive('ok', ({ pretty }) => {
+    channel.push('parse', { code }).receive('ok', ({ error, pretty }) => {
       console.log('pretty', pretty)
-
-      this.setState({ pretty })
+      if (error) {
+        this.setState({ error })
+      } else {
+        this.setState({ pretty, error: null })
+      }
     })
   }, 400)
 
@@ -28,7 +32,7 @@ export default class Component extends React.Component {
   }
 
   render() {
-    const { code, pretty } = this.state
+    const { code, error, pretty } = this.state
     return (
       <div className="explorer--wrapper">
         <div className="panel">
@@ -46,9 +50,9 @@ export default class Component extends React.Component {
         </div>
         <div className="panel">
           <h5>AST</h5>
-          <div className="output">
-            <Ansi>{pretty}</Ansi>
-          </div>
+          {error
+           ? <div className="error">Error on line {error.line}: {error.message}</div>
+           : <div className="output"><Ansi>{pretty}</Ansi></div>}
         </div>
       </div>
     )
