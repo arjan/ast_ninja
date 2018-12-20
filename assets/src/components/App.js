@@ -1,5 +1,5 @@
 import React from 'react'
-import debounce from 'lodash/debounce'
+import throttle from 'lodash/throttle'
 import Ansi from 'ansi-to-react'
 import { channel } from 'socket'
 import AceEditor from 'react-ace'
@@ -7,14 +7,26 @@ import AceEditor from 'react-ace'
 import 'brace/mode/elixir'
 import 'brace/theme/github'
 
+const CODE = `# this is a demo
+defmodule Greeting do
+  def hello do
+    IO.puts "Hello, world!"
+  end
+end
+`
+
 export default class Component extends React.Component {
   state = {
-    code: '',
+    code: CODE,
     pretty: '',
     error: null
   }
 
-  update = debounce(() => {
+  componentWillMount() {
+    this.update()
+  }
+
+  update = throttle(() => {
     const { code } = this.state
     channel.push('parse', { code }).receive('ok', ({ error, pretty }) => {
       console.log('pretty', pretty)
@@ -24,7 +36,7 @@ export default class Component extends React.Component {
         this.setState({ pretty, error: null })
       }
     })
-  }, 400)
+  }, 100)
 
   onCodeChange = (code) => {
     this.setState({ code })
