@@ -29,7 +29,6 @@ export default class Component extends React.Component {
   update = throttle(() => {
     const { code } = this.state
     channel.push('parse', { code }).receive('ok', ({ error, pretty }) => {
-      console.log('pretty', pretty)
       if (error) {
         this.setState({ error })
       } else {
