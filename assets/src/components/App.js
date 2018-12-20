@@ -36,7 +36,7 @@ export default class Component extends React.Component {
     return (
       <div className="explorer--wrapper">
         <div className="panel">
-          <h5>Code</h5>
+          <h5>Elixir Code</h5>
           <AceEditor
             mode="elixir"
             theme="github"

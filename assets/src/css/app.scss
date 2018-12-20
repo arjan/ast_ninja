@@ -11,6 +11,9 @@ html, body, #root {
   > div.panel {
     flex: 1;
     height: 100% !important;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 
     h5 {
       margin: 0; padding: 12px;
@@ -18,12 +21,16 @@ html, body, #root {
       color: white;
 
     }
+
+    #editor {
+      flex: 1;
+      height: auto !important;
+      width: auto !important;
+    }
+
     &:first-child {
       border-right: 2px solid #ccc;
     }
-  }
-  > #editor {
-    height: 100% !important;
   }
 
   .error {
