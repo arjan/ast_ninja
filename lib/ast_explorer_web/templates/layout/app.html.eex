@@ -8,7 +8,7 @@
     <title>AST Ninja</title>
     <meta name="author" content="Arjan Scherpenisse">
     <meta name="description" content="Explore the AST (Abstract Syntax Tree) that the Elixir parser generates">
-    <meta property="og:image" content="/images/og_image.png" />
+    <meta property="og:image" content="<%= Routes.static_url(@conn, "/images/og_image.png") %>" />
 
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
