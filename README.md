@@ -5,4 +5,4 @@ inspect the output in real time. Like
 [Code.string_to_quoted/2](https://hexdocs.pm/elixir/Code.html#string_to_quoted/2),
 but in a browser.
 
-Demo: https://astexplorer.apps.miraclethings.nl/
+Demo: https://ast.ninja/
