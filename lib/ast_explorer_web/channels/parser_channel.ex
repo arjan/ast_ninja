@@ -11,8 +11,11 @@ defmodule AstExplorerWeb.Channels.ParserChannel do
         {{:ok, ast}, {:ok, tokens}} ->
           %{ast: ast, tokens: tokens}
 
+        {_, {:error, {_, _, message, _}, _, _}} ->
+          %{tokensError: %{line: 0, message: inspect(message)}}
+
         {_, {:error, _, _, _}} ->
-          %{tokensError: %{line: 0, message: "tokenizer error"}}
+          %{tokensError: %{line: 0, message: "Tokenize error"}}
 
         {{:error, {line, message, _}}, {:ok, tokens}} ->
           %{astError: %{line: line, message: message}, tokens: tokens}
