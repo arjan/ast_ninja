@@ -2,30 +2,40 @@ defmodule AstExplorerWeb.Channels.ParserChannel do
   use AstExplorerWeb, :channel
 
   def join("parser:ast", _payload, socket) do
-    IO.inspect(socket, label: "socket")
     {:ok, socket}
   end
 
   def handle_in("parse", %{"code" => code}, socket) do
-    IO.inspect(code, label: "code")
-
     response =
-      case pretty_ast(code) do
-        {:ok, pretty} ->
-          %{pretty: pretty}
+      case {parse_ast(code), parse_tokens(code)} do
+        {{:ok, ast}, {:ok, tokens}} ->
+          %{ast: ast, tokens: tokens}
 
-        {:error, {line, message, _}} ->
-          %{error: %{line: line, message: message}}
+        {_, {:error, _, _, _}} ->
+          %{tokensError: %{line: 0, message: "tokenizer error"}}
+
+        {{:error, {line, message, _}}, {:ok, tokens}} ->
+          %{astError: %{line: line, message: message}, tokens: tokens}
       end
 
     {:reply, {:ok, response}, socket}
   end
 
-  @colors [number: :red, atom: :blue, map: :darkgreen, string: :green]
-  def pretty_ast(code) do
+  def parse_ast(code) do
     with {:ok, ast} <- Code.string_to_quoted(code) do
-      json_safe = inspect(ast, width: 40, pretty: true, syntax_colors: @colors)
-      {:ok, json_safe}
+      pretty(ast)
     end
+  end
+
+  def parse_tokens(code) do
+    with {:ok, data} <- :elixir_tokenizer.tokenize(String.to_charlist(code), 0, []) do
+      pretty(data)
+    end
+  end
+
+  @colors [number: :red, atom: :blue, map: :darkgreen, string: :green]
+  defp pretty(data) do
+    pretty = inspect(data, width: 40, pretty: true, syntax_colors: @colors)
+    {:ok, pretty}
   end
 end
