@@ -7,7 +7,7 @@ defmodule AstExplorer.Parsers.Tokens do
         %{code: pretty(data)}
 
       {:error, {_, _, message, _}, _, _} ->
-        %{error: message}
+        %{error: IO.chardata_to_string(message)}
 
       {:error, _} ->
         %{error: "Tokenize error"}

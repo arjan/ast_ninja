@@ -4,6 +4,7 @@ import { Navbar, Button } from '@blueprintjs/core'
 import '@blueprintjs/core/lib/css/blueprint.css'
 import 'react-mosaic-component/react-mosaic-component.css'
 
+import { useLocalStorage } from '../hooks'
 import CodeEditor from './CodeEditor'
 import RawOutput from './RawOutput'
 
@@ -17,40 +18,43 @@ const ELEMENT_MAP = {
   tokens: [RawOutput, "Tokens"],
 }
 
+const INITIAL_LAYOUT = {
+  direction: 'row',
+  first: 'elixir',
+  second: {
+    direction: 'row',
+    first: 'tokens',
+    second: 'ast',
+  },
+  splitPercentage: 40,
+}
 
-export default class extends React.Component {
+export default function(props) {
+  const [mosaic, setMosaic] = useLocalStorage('mosaic', INITIAL_LAYOUT);
 
-  renderTile = (id, path) => {
+  const renderTile = (id, path) => {
     const [Element, title] = ELEMENT_MAP[id]
     return (<MosaicWindow path={path} title={title} toolbarControls={[]}>
-      <Element name={id} {...this.props} />
+      <Element name={id} {...props} />
     </MosaicWindow>
     )
   }
 
-  onChangeMosaic = (payload) => {
-    this.props.dispatch({ action: 'mosaic', payload })
-  }
+  return (
+    <div className="app">
+      <Navbar className="bp3-dark">
+        <Navbar.Group align="left">
+          <Navbar.Heading>
+            AST Ninja
+          </Navbar.Heading>
+        </Navbar.Group>
+      </Navbar>
 
-  render() {
-    const { state, dispatch } = this.props
-
-    return (
-      <div className="app">
-        <Navbar className="bp3-dark">
-          <Navbar.Group align="left">
-            <Navbar.Heading>
-              AST Ninja
-            </Navbar.Heading>
-          </Navbar.Group>
-        </Navbar>
-
-        <Mosaic
-          renderTile={this.renderTile}
-          onChange={this.onChangeMosaic}
-          value={state.mosaic}
-        />
-      </div>
-    )
-  }
+      <Mosaic
+        renderTile={renderTile}
+        onChange={setMosaic}
+        value={mosaic}
+      />
+    </div>
+  )
 }
