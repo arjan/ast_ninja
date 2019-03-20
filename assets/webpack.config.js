@@ -12,6 +12,7 @@ module.exports = (env, options) => ({
       new OptimizeCSSAssetsPlugin({})
     ]
   },
+  devtool: 'cheap-module-eval-source-map',
   entry: {
     './src/index.js': ['./src/index.js'].concat(glob.sync('./vendor/**/*.js'))
   },

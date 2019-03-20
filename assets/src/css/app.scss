@@ -38,3 +38,11 @@ html, body, #root, #root > div.app {
     font-size: 14px;
   }
 }
+
+.bp3-navbar {
+  .bp3-control.bp3-checkbox {
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 0;
+  }
+}
