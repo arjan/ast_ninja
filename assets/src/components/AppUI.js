@@ -28,6 +28,10 @@ export default class extends React.Component {
     )
   }
 
+  onChangeMosaic = (payload) => {
+    this.props.dispatch({ action: 'mosaic', payload })
+  }
+
   render() {
     const { state, dispatch } = this.props
 
@@ -43,16 +47,8 @@ export default class extends React.Component {
 
         <Mosaic
           renderTile={this.renderTile}
-          initialValue={{
-            direction: 'row',
-            first: 'elixir',
-            second: {
-              direction: 'row',
-              first: 'tokens',
-              second: 'ast',
-            },
-            splitPercentage: 40,
-          }}
+          onChange={this.onChangeMosaic}
+          value={state.mosaic}
         />
       </div>
     )

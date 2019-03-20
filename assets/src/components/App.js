@@ -18,7 +18,17 @@ end
 
 const INITIAL_STATE = {
   code: CODE,
-  parseResult: {}
+  parseResult: {},
+  mosaic: {
+    direction: 'row',
+    first: 'elixir',
+    second: {
+      direction: 'row',
+      first: 'tokens',
+      second: 'ast',
+    },
+    splitPercentage: 40,
+  }
 }
 
 export default function() {
