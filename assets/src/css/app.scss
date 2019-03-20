@@ -24,9 +24,17 @@ html, body, #root, #root > div.app {
 
 .raw-output {
   flex: 1;
-  padding: 12px;
-  white-space: pre;
-  font-family: monospace;
   overflow: auto;
-  font-size: 14px;
+  .error {
+    padding: 12px;
+    background-color: red;
+    font-weight: 500;
+    color: white;
+  }
+  code {
+    padding: 12px;
+    white-space: pre;
+    font-family: monospace;
+    font-size: 14px;
+  }
 }
