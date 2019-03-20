@@ -53,3 +53,13 @@ html, body, #root, #root > div.app {
     margin-bottom: 0;
   }
 }
+
+.bp3-callout {
+  ul {
+    margin: 0;
+    padding: 0;
+    padding-left: 20px;
+  }
+
+  box-shadow: 0 1px 1px rgba(16, 22, 26, 0.15);
+}
