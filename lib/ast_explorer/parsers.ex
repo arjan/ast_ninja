@@ -1,12 +1,12 @@
 defmodule AstExplorer.Parsers do
-  @parsers ~w(ast tokens)
+  @parsers ~w(ast tokens atom_free_tokens)
 
   def parsers() do
     @parsers
   end
 
   def mod(parser) when parser in @parsers do
-    Module.concat(__MODULE__, String.capitalize(parser))
+    Module.concat(__MODULE__, Inflex.camelize(parser))
   end
 
   @colors [number: :red, atom: :blue, map: :darkgreen, string: :green]

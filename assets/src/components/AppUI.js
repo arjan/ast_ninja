@@ -16,6 +16,7 @@ const ELEMENT_MAP = {
   elixir: [CodeEditor, "Elixir code"],
   ast: [RawOutput, "AST"],
   tokens: [RawOutput, "Tokens"],
+  atom_free_tokens: [RawOutput, "Tokens (atom free)"],
 }
 
 const INITIAL_LAYOUT = {

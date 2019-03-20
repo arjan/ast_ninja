@@ -24,7 +24,9 @@ html, body, #root, #root > div.app {
 
 .raw-output {
   flex: 1;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+
   .error {
     padding: 12px;
     background-color: red;
@@ -32,10 +34,15 @@ html, body, #root, #root > div.app {
     color: white;
   }
   code {
+    flex: 1;
+    overflow: auto;
     padding: 12px;
     white-space: pre;
     font-family: monospace;
     font-size: 14px;
+  }
+  .bp3-tag {
+    margin-right: 10px;
   }
 }
 
