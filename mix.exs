@@ -19,7 +19,7 @@ defmodule AstExplorer.MixProject do
   def application do
     [
       mod: {AstExplorer.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :elixir]
     ]
   end
 
