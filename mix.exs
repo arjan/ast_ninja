@@ -5,7 +5,7 @@ defmodule AstExplorer.MixProject do
     [
       app: :ast_explorer,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -19,7 +19,7 @@ defmodule AstExplorer.MixProject do
   def application do
     [
       mod: {AstExplorer.Application, []},
-      extra_applications: [:logger, :runtime_tools, :elixir]
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 
