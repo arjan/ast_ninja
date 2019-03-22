@@ -18,7 +18,8 @@ end
 
 const INITIAL_STATE = {
   code: CODE,
-  parseResult: {}
+  parseResult: {},
+  parsers: null
 }
 
 export default function() {

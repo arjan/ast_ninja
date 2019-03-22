@@ -6,10 +6,9 @@ defmodule AstExplorerWeb.Channels.ParserChannel do
     {:ok, socket}
   end
 
-  def handle_in("parse", %{"code" => code}, socket) do
+  def handle_in("parse", %{"code" => code, "parsers" => parsers}, socket) do
     response =
-      Parsers.parsers()
-      |> Enum.map(fn parser ->
+      Enum.map(parsers, fn parser ->
         {parser, Parsers.mod(parser).parse(code)}
       end)
       |> Map.new()

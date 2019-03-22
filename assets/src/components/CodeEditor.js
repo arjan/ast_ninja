@@ -9,8 +9,8 @@ import { channel } from '../socket'
 export default class extends React.Component {
 
   update = throttle(() => {
-    const { code } = this.props.state
-    channel.push('parse', { code }).receive('ok', payload => {
+    const { code, parsers } = this.props.state
+    channel.push('parse', { code, parsers }).receive('ok', payload => {
       this.props.dispatch({ action: 'parseResult', payload })
     })
   }, 100)

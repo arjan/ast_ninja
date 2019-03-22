@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Mosaic, MosaicWindow } from 'react-mosaic-component'
 import { Navbar, Button, Checkbox } from '@blueprintjs/core'
 import '@blueprintjs/core/lib/css/blueprint.css'
@@ -56,8 +56,7 @@ function togglePanel(name, show, mosaic) {
   }
 }
 
-
-function renderRemainingButtons(mosaic, setMosaic) {
+function getEnabledPanels(mosaic) {
   const rendered = []
   if (typeof mosaic === 'string') {
     rendered.push(mosaic)
@@ -76,13 +75,19 @@ function renderRemainingButtons(mosaic, setMosaic) {
     }
     traverse(mosaic, rendered)
   }
+  return rendered
+}
 
+function renderRemainingButtons(mosaic, onChange) {
+  const rendered = getEnabledPanels(mosaic)
   return Object.keys(ELEMENT_MAP).map(
     k => <Checkbox
            key={k}
            label={ELEMENT_MAP[k][1]}
            checked={rendered.indexOf(k) >= 0}
-           onChange={e => setMosaic(togglePanel(k, e.target.checked, mosaic))}
+           onChange={e => {
+             onChange(togglePanel(k, e.target.checked, mosaic))
+           }}
     />
   )
 }
@@ -90,12 +95,23 @@ function renderRemainingButtons(mosaic, setMosaic) {
 export default function(props) {
   const [mosaic, setMosaic] = useLocalStorage('mosaic', INITIAL_LAYOUT);
 
+  const dispatchParsers = () =>
+    props.dispatch({ action: 'parsers', payload: getEnabledPanels(mosaic).filter(p => p !== 'elixir') })
+
+  useEffect(() => {
+    if (props.state.parsers === null) dispatchParsers()
+  })
+
   const renderTile = (id, path) => {
     const [Element, title] = ELEMENT_MAP[id]
     return (<MosaicWindow path={path} title={title} toolbarControls={[]}>
       <Element name={id} {...props} />
     </MosaicWindow>
     )
+  }
+  const onChange = mosaic => {
+    dispatchParsers()
+    setMosaic(mosaic)
   }
 
   return (
@@ -107,7 +123,7 @@ export default function(props) {
           </Navbar.Heading>
         </Navbar.Group>
         <Navbar.Group align="right">
-          {renderRemainingButtons(mosaic, setMosaic)}
+          {renderRemainingButtons(mosaic, onChange)}
         </Navbar.Group>
       </Navbar>
 
