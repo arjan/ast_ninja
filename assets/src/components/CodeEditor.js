@@ -4,23 +4,14 @@ import throttle from 'lodash/throttle'
 import 'brace/mode/elixir'
 import 'brace/theme/textmate'
 
-import { channel } from '../socket'
-
 export default class extends React.Component {
 
   update = throttle(() => {
-    const { code, parsers } = this.props.state
-    channel.push('parse', { code, parsers }).receive('ok', payload => {
-      this.props.dispatch({ action: 'parseResult', payload })
-    })
+    this.props.dispatch({ action: 'parse' })
   }, 100)
 
   onCodeChange = (payload) => {
     this.props.dispatch({ action: 'code', payload })
-    this.update()
-  }
-
-  componentDidMount() {
     this.update()
   }
 

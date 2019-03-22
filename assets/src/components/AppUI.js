@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Mosaic, MosaicWindow } from 'react-mosaic-component'
-import { Navbar, Button, Checkbox } from '@blueprintjs/core'
+import { Navbar, Button, Checkbox, Popover, Menu, MenuItem } from '@blueprintjs/core'
 import '@blueprintjs/core/lib/css/blueprint.css'
 import 'react-mosaic-component/react-mosaic-component.css'
 
@@ -80,38 +80,54 @@ function getEnabledPanels(mosaic) {
 
 function renderRemainingButtons(mosaic, onChange) {
   const rendered = getEnabledPanels(mosaic)
-  return Object.keys(ELEMENT_MAP).map(
-    k => <Checkbox
-           key={k}
-           label={ELEMENT_MAP[k][1]}
-           checked={rendered.indexOf(k) >= 0}
-           onChange={e => {
-             onChange(togglePanel(k, e.target.checked, mosaic))
-           }}
-    />
+  const items = Object.keys(ELEMENT_MAP)
+                      .filter(k => rendered.indexOf(k) == -1)
+                      .map(
+                        k => <MenuItem
+                               key={k}
+                               text={ELEMENT_MAP[k][1]}
+                               onClick={() => {
+                                 onChange(togglePanel(k, true, mosaic))
+                               }}
+                        />
+                      )
+  if (!items.length) {
+    return null
+  }
+  return (
+    <Popover>
+      <Button rightIcon="chevron-down">Add…</Button>
+      <Menu>{items}</Menu>
+    </Popover>
   )
 }
 
 export default function(props) {
   const [mosaic, setMosaic] = useLocalStorage('mosaic', INITIAL_LAYOUT);
 
-  const dispatchParsers = () =>
+  const dispatchParsers = (mosaic) => {
     props.dispatch({ action: 'parsers', payload: getEnabledPanels(mosaic).filter(p => p !== 'elixir') })
+    props.dispatch({ action: 'parse' })
+  }
 
   useEffect(() => {
-    if (props.state.parsers === null) dispatchParsers()
+    if (props.state.parsers === null) dispatchParsers(mosaic)
   })
+
+  const onChange = mosaic => {
+    dispatchParsers(mosaic)
+    setMosaic(mosaic)
+  }
 
   const renderTile = (id, path) => {
     const [Element, title] = ELEMENT_MAP[id]
-    return (<MosaicWindow path={path} title={title} toolbarControls={[]}>
+    return (<MosaicWindow
+              path={path}
+              title={title}
+              toolbarControls={[<Button key="remove" minimal icon="cross" onClick={e => onChange(togglePanel(id, false, mosaic))} />]}>
       <Element name={id} {...props} />
     </MosaicWindow>
     )
-  }
-  const onChange = mosaic => {
-    dispatchParsers()
-    setMosaic(mosaic)
   }
 
   return (
