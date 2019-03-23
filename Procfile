@@ -1,1 +1,1 @@
-web: mix phx.server
+web: touch src/elixir_tokenizer.erl && mix phx.server

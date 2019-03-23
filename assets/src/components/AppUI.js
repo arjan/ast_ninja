@@ -7,6 +7,7 @@ import 'react-mosaic-component/react-mosaic-component.css'
 import { useLocalStorage } from '../hooks'
 import CodeEditor from './CodeEditor'
 import RawOutput from './RawOutput'
+import JsonAST from './JsonAST'
 
 function Placeholder() {
   return <div>Placeholder</div>
@@ -19,6 +20,7 @@ const ELEMENT_MAP = {
   existing_atom_tokens: [RawOutput, "Tokenizer (existing atoms)"],
   safe_atom_tokens: [RawOutput, "Tokenizer (safe atoms)"],
   safe_ast: [RawOutput, "AST (safe atoms)"],
+  json_ast: [JsonAST, "AST (interactive)"],
 }
 
 const INITIAL_LAYOUT = {
