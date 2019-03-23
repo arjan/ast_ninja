@@ -1,5 +1,5 @@
 defmodule AstExplorer.Parsers do
-  @parsers ~w(existing_atom_tokens ast tokens)
+  @parsers ~w(safe_atom_tokens existing_atom_tokens safe_ast ast tokens)
 
   def parsers() do
     @parsers
@@ -11,7 +11,7 @@ defmodule AstExplorer.Parsers do
 
   @colors [number: :red, atom: :blue, map: :darkgreen, string: :green]
   def pretty(data) do
-    inspect(data, width: 40, pretty: true, syntax_colors: @colors)
+    inspect(data, width: 40, limit: :infinity, pretty: true, syntax_colors: @colors)
   end
 
   def gather_warnings(fun) do

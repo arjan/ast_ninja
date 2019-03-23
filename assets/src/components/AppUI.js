@@ -17,6 +17,8 @@ const ELEMENT_MAP = {
   ast: [RawOutput, "AST"],
   tokens: [RawOutput, "Tokenizer"],
   existing_atom_tokens: [RawOutput, "Tokenizer (existing atoms)"],
+  safe_atom_tokens: [RawOutput, "Tokenizer (safe atoms)"],
+  safe_ast: [RawOutput, "AST (safe atoms)"],
 }
 
 const INITIAL_LAYOUT = {
