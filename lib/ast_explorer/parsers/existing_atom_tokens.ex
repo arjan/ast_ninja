@@ -1,4 +1,4 @@
-defmodule AstExplorer.Parsers.AtomFreeTokens do
+defmodule AstExplorer.Parsers.ExistingAtomTokens do
   import AstExplorer.Parsers
 
   def parse(code) do

@@ -1,5 +1,5 @@
 defmodule AstExplorer.Parsers do
-  @parsers ~w(atom_free_tokens ast tokens)
+  @parsers ~w(existing_atom_tokens ast tokens)
 
   def parsers() do
     @parsers

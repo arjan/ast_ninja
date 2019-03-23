@@ -15,8 +15,8 @@ function Placeholder() {
 const ELEMENT_MAP = {
   elixir: [CodeEditor, "Elixir code"],
   ast: [RawOutput, "AST"],
-  tokens: [RawOutput, "Tokens"],
-  atom_free_tokens: [RawOutput, "Tokens (atom free)"],
+  tokens: [RawOutput, "Tokenizer"],
+  existing_atom_tokens: [RawOutput, "Tokenizer (existing atoms)"],
 }
 
 const INITIAL_LAYOUT = {
