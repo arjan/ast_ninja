@@ -1,6 +1,4 @@
-%% DO NOT USE
-
--module(atom_free_elixir_tokenizer).
+-module(elixir_tokenizer).
 -include("elixir.hrl").
 -export([tokenize/1, tokenize/3, tokenize/4, invalid_do_error/1]).
 
@@ -215,7 +213,7 @@ tokenize([$~, S, H | T] = Original, Line, Column, Scope, Tokens) when ?is_sigil(
 
 tokenize([$~, S, H | _] = Original, Line, Column, _Scope, Tokens) when ?is_upcase(S) orelse ?is_downcase(S) ->
   MessageString =
-    "\"~ts\" (column ~p, codepoint U+~4.16.0B). The available delimiters are: "
+    "\"~ts\" (column ~p, code point U+~4.16.0B). The available delimiters are: "
     "//, ||, \"\", '', (), [], {}, <>",
   Message = io_lib:format(MessageString, [[H], Column + 2, H]),
   {error, {Line, Column, "invalid sigil delimiter: ", Message}, Original, Tokens};
@@ -236,9 +234,9 @@ tokenize([$?, $\\, H | T], Line, Column, Scope, Tokens) ->
 tokenize([$?, Char | T], Line, Column, Scope, Tokens) ->
   case handle_char(Char) of
     {Escape, Name} ->
-      Msg = io_lib:format("found ? followed by codepoint 0x~.16B (~ts), please use ?~ts instead",
+      Msg = io_lib:format("found ? followed by code point 0x~.16B (~ts), please use ?~ts instead",
                           [Char, Name, Escape]),
-      elixir_errors:warn(Line, Scope#elixir_tokenizer.file, Msg);
+      elixir_errors:erl_warn(Line, Scope#elixir_tokenizer.file, Msg);
     false ->
       ok
   end,
@@ -425,9 +423,10 @@ tokenize([$:, H | T] = Original, Line, Column, Scope, Tokens) when ?is_quote(H) 
     {NewLine, NewColumn, Parts, Rest} ->
       case is_unnecessary_quote(Parts, Scope) of
         true ->
-          elixir_errors:warn(Line, Scope#elixir_tokenizer.file, io_lib:format(
+          elixir_errors:erl_warn(Line, Scope#elixir_tokenizer.file, io_lib:format(
             "found quoted atom \"~ts\" but the quotes are not required. "
-            "Quotes should only be used to introduce atoms with foreign characters in them",
+            "Atoms made exclusively of Unicode letters, numbers, underscore, "
+            "and @ do not require quotes",
             [hd(Parts)]
           ));
 
@@ -580,7 +579,7 @@ tokenize(String, Line, Column, Scope, Tokens) ->
   end.
 
 unexpected_token([T | Rest], Line, Column, Tokens) ->
-  Message = io_lib:format("\"~ts\" (column ~p, codepoint U+~4.16.0B)", [[T], Column, T]),
+  Message = io_lib:format("\"~ts\" (column ~p, code point U+~4.16.0B)", [[T], Column, T]),
   {error, {Line, Column, "unexpected token: ", Message}, Rest, Tokens}.
 
 tokenize_eol(Rest, Line, Scope, Tokens) ->
@@ -645,10 +644,11 @@ handle_strings(T, Line, Column, H, Scope, Tokens) ->
     {NewLine, NewColumn, Parts, [$: | Rest]} when ?is_space(hd(Rest)) ->
       case is_unnecessary_quote(Parts, Scope) of
         true ->
-          elixir_errors:warn(Line, Scope#elixir_tokenizer.file, io_lib:format(
+          elixir_errors:erl_warn(Line, Scope#elixir_tokenizer.file, io_lib:format(
             "found quoted keyword \"~ts\" but the quotes are not required. "
-            "Note that keywords are always atoms, even when quoted, and quotes "
-            "should only be used to introduce keywords with foreign characters in them",
+            "Note that keywords are always atoms, even when quoted. "
+            "Similar to atoms, keywords made exclusively of Unicode "
+            "letters, numbers, underscore, and @ do not require quotes",
             [hd(Parts)]
           ));
 
@@ -738,9 +738,10 @@ handle_dot([$., H | T] = Original, Line, Column, DotInfo, Scope, Tokens) when ?i
     {NewLine, NewColumn, [Part], Rest} when is_list(Part) ->
       case is_unnecessary_quote([Part], Scope) of
         true ->
-          elixir_errors:warn(Line, Scope#elixir_tokenizer.file, io_lib:format(
+          elixir_errors:erl_warn(Line, Scope#elixir_tokenizer.file, io_lib:format(
             "found quoted call \"~ts\" but the quotes are not required. "
-            "Quotes should only be used to perform calls with foreign characters in them",
+            "Calls made exclusively of Unicode letters, numbers, and underscore "
+            "do not require quotes",
             [Part]
           ));
 
@@ -899,7 +900,7 @@ remove_heredoc_spaces(Body, Spaces, Marker, Scope) ->
                           "      \"\"\"~n"
                           "    end~n~n"
                           "The current heredoc line is indented too little", [[Marker, Marker, Marker]]),
-      elixir_errors:warn(Line, Scope#elixir_tokenizer.file, Msg),
+      elixir_errors:erl_warn(Line, Scope#elixir_tokenizer.file, Msg),
       Acc
   end.
 
@@ -1106,9 +1107,9 @@ tokenize_identifier(String, Line, Column, Scope) ->
       Right = unicode:characters_to_nfc_list(Wrong),
       RightCodepoints = list_to_codepoint_hex(Right),
       WrongCodepoints = list_to_codepoint_hex(Wrong),
-      Message = io_lib:format("Elixir expects unquoted Unicode atoms and variables to be in NFC form.\n\n"
-                              "Got:\n\n    \"~ts\" (codepoints~ts)\n\n"
-                              "Expected:\n\n    \"~ts\" (codepoints~ts)\n\n"
+      Message = io_lib:format("Elixir expects unquoted Unicode atoms, variables, and calls to be in NFC form.\n\n"
+                              "Got:\n\n    \"~ts\" (code points~ts)\n\n"
+                              "Expected:\n\n    \"~ts\" (code points~ts)\n\n"
                               "Syntax error before: ",
                               [Wrong, WrongCodepoints, Right, RightCodepoints]),
       {error, {Line, Column, Message, Wrong}};
@@ -1117,14 +1118,14 @@ tokenize_identifier(String, Line, Column, Scope) ->
   end.
 
 list_to_codepoint_hex(List) ->
-  [io_lib:format(" ~4.16.0B", [Codepoint]) || Codepoint <- List].
+  [io_lib:format(" 0x~4.16.0B", [Codepoint]) || Codepoint <- List].
 
 tokenize_alias(Rest, Line, Column, Atom, Length, Ascii, Special, Scope, Tokens) ->
   if
     not Ascii ->
       AtomName = atom_to_list(Atom),
       Invalid = hd([C || C <- AtomName, C > 127]),
-      Reason = {Line, Column, invalid_character_error("alias (only ascii characters are allowed)", Invalid), AtomName},
+      Reason = {Line, Column, invalid_character_error("alias (only ASCII characters are allowed)", Invalid), AtomName},
       {error, Reason, AtomName ++ Rest, Tokens};
     Special /= [] ->
       AtomName = atom_to_list(Atom),
@@ -1373,7 +1374,7 @@ keyword('catch')  -> block;
 keyword(_) -> false.
 
 invalid_character_error(What, Char) ->
-  io_lib:format("invalid character \"~ts\" (codepoint U+~4.16.0B) in ~ts: ", [[Char], Char, What]).
+  io_lib:format("invalid character \"~ts\" (code point U+~4.16.0B) in ~ts: ", [[Char], Char, What]).
 
 invalid_do_error(Prefix) ->
   {Prefix, ". In case you wanted to write a \"do\" expression, "
@@ -1392,7 +1393,7 @@ invalid_do_with_fn_error(Prefix) ->
   {Prefix, ". Anonymous functions are written as:\n\n"
   "    fn pattern -> expression end"}.
 
-% TODO: Turn into an error on Elixir 2.0.
+% TODO: Turn into an error on v2.0
 maybe_warn_too_many_of_same_char([T | _] = Token, [T | _] = _Rest, Line, Scope) ->
   Warning =
     case T of
@@ -1400,11 +1401,11 @@ maybe_warn_too_many_of_same_char([T | _] = Token, [T | _] = _Rest, Line, Scope) 
       _ -> io_lib:format("please use a space between \"~ts\" and the next \"~ts\"", [Token, [T]])
     end,
   Message = io_lib:format("found \"~ts\" followed by \"~ts\", ~ts", [Token, [T], Warning]),
-  elixir_errors:warn(Line, Scope#elixir_tokenizer.file, Message);
+  elixir_errors:erl_warn(Line, Scope#elixir_tokenizer.file, Message);
 maybe_warn_too_many_of_same_char(_Token, _Rest, _Line, _Scope) ->
   ok.
 
-%% TODO: Turn into an error on Elixir v2.0
+%% TODO: Turn into an error on v2.0
 maybe_warn_for_ambiguous_bang_before_equals(Kind, Atom, [$= | _], Scope, Line) ->
   {What, Identifier} =
     case Kind of
@@ -1418,7 +1419,7 @@ maybe_warn_for_ambiguous_bang_before_equals(Kind, Atom, [$= | _], Scope, Line) -
                           "It is unclear if you mean \"~ts ~ts=\" or \"~ts =\". Please add "
                           "a space before or after ~ts to remove the ambiguity",
                           [What, Identifier, [Last], lists:droplast(Identifier), [Last], Identifier, [Last]]),
-      elixir_errors:warn(Line, Scope#elixir_tokenizer.file, Msg);
+      elixir_errors:erl_warn(Line, Scope#elixir_tokenizer.file, Msg);
     _ ->
       ok
   end;
