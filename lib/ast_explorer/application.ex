@@ -6,6 +6,8 @@ defmodule AstExplorer.Application do
   use Application
 
   def start(_type, _args) do
+    load_custom_elixir_tokenizer()
+
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
@@ -25,5 +27,14 @@ defmodule AstExplorer.Application do
   def config_change(changed, _new, removed) do
     AstExplorerWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp load_custom_elixir_tokenizer() do
+    [path] =
+      :code.get_path()
+      |> Enum.map(&to_string/1)
+      |> Enum.filter(&String.contains?(&1, "ast_explorer/ebin"))
+
+    {:module, :elixir_tokenizer} = :code.load_abs('#{path}/elixir_tokenizer')
   end
 end
