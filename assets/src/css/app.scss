@@ -37,9 +37,12 @@ html, body, #root, #root > div.app {
     flex: 1;
     overflow: auto;
     padding: 12px;
-    white-space: pre;
+    white-space: pre-wrap;
     font-family: monospace;
     font-size: 14px;
+  }
+  &.error code {
+    opacity: 0.3;
   }
   .bp3-tag {
     margin-right: 10px;

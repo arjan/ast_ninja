@@ -1,5 +1,5 @@
 defmodule AstNinja.Parsers do
-  @parsers ~w(safe_atom_tokens existing_atom_tokens safe_ast ast tokens json_ast)
+  @parsers ~w(safe_atom_tokens existing_atom_tokens safe_ast ast tokens json_ast filter_demo)
 
   def parsers() do
     @parsers
@@ -10,8 +10,9 @@ defmodule AstNinja.Parsers do
   end
 
   @colors [number: :red, atom: :blue, map: :darkgreen, string: :green]
-  def pretty(data) do
-    inspect(data, width: 40, limit: :infinity, pretty: true, syntax_colors: @colors)
+  @defaults [width: 40, limit: :infinity, pretty: true, syntax_colors: @colors]
+  def pretty(data, opts \\ []) do
+    inspect(data, Keyword.merge(@defaults, opts))
   end
 
   def gather_warnings(fun) do

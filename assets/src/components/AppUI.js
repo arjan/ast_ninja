@@ -8,19 +8,21 @@ import { useLocalStorage } from '../hooks'
 import CodeEditor from './CodeEditor'
 import RawOutput from './RawOutput'
 import JsonAST from './JsonAST'
+import CodeSnippetsButton from './CodeSnippetsButton'
 
 function Placeholder() {
   return <div>Placeholder</div>
 }
 
 const ELEMENT_MAP = {
-  elixir: [CodeEditor, "Elixir code"],
+  elixir: [CodeEditor, "Elixir code", CodeSnippetsButton],
   ast: [RawOutput, "AST"],
   tokens: [RawOutput, "Tokenizer"],
   existing_atom_tokens: [RawOutput, "Tokenizer (existing atoms)"],
   safe_atom_tokens: [RawOutput, "Tokenizer (safe atoms)"],
   safe_ast: [RawOutput, "AST (safe atoms)"],
   json_ast: [JsonAST, "AST (interactive)"],
+  filter_demo: [RawOutput, "AST → SQL demo"],
 }
 
 const INITIAL_LAYOUT = {
@@ -124,11 +126,19 @@ export default function(props) {
   }
 
   const renderTile = (id, path) => {
-    const [Element, title] = ELEMENT_MAP[id]
+    const [Element, title, Extra] = ELEMENT_MAP[id]
+
+    const controls = []
+    if (Extra) {
+      controls.push(<Extra key="extra" {...props} />)
+    }
+
+    controls.push(<Button key="remove" minimal icon="cross" onClick={e => onChange(togglePanel(id, false, mosaic))} />)
+
     return (<MosaicWindow
               path={path}
               title={title}
-              toolbarControls={[<Button key="remove" minimal icon="cross" onClick={e => onChange(togglePanel(id, false, mosaic))} />]}>
+              toolbarControls={controls}>
       <Element name={id} {...props} />
     </MosaicWindow>
     )

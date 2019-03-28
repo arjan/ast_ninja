@@ -1,38 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
+import classNames from 'classnames'
 import Ansi from 'ansi-to-react'
 import { Callout, Tag } from '@blueprintjs/core'
 
-export default class extends React.Component {
+function renderMetadata({ metadata }) {
+  return (
+    <Callout>
+      {Object.keys(metadata).map(k => <Tag large intent="primary" key={k}>{k}: {metadata[k]}</Tag>)}
+    </Callout>
+  )
+}
 
-  renderMetadata({ metadata }) {
-    return (
-      <Callout>
-        {Object.keys(metadata).map(k => <Tag large intent="primary" key={k}>{k}: {metadata[k]}</Tag>)}
-      </Callout>
-    )
-  }
+function renderWarnings({ warnings }) {
+  return (
+    <Callout intent="warning">
+      <ul>
+        {warnings.map(({ message }, idx) => <li key={idx}>{message}</li>)}
+      </ul>
+    </Callout>
+  )
+}
 
-  renderWarnings({ warnings }) {
-    return (
-      <Callout intent="warning">
-        <ul>
-          {warnings.map(({ message }, idx) => <li key={idx}>{message}</li>)}
-        </ul>
-      </Callout>
-    )
-  }
+let prev = {}
 
-  render() {
-    const { name } = this.props
-    const output = this.props.state.parseResult[name] || {}
+export default function({ state, name }) {
+  const output = state.parseResult[name] || {}
+  const { code, error, warnings, metadata} = output
 
-    return (
-      <div className="raw-output">
-        {output.error && <div className="error">{output.error}</div>}
-        {output.warnings && output.warnings.length && this.renderWarnings(output) || null}
-        <Ansi>{output.code}</Ansi>
-        {output.metadata && this.renderMetadata(output)}
-      </div>
-    )
-  }
+  if (!error) prev[name] = code
+  return (
+    <div className={classNames('raw-output', { error })}>
+      {error && <div className="error">{error}</div>}
+      {warnings && warnings.length && this.renderWarnings(output) || null}
+      <Ansi>{code || prev[name]}</Ansi>
+      {metadata && this.renderMetadata(output)}
+    </div>
+  )
 }
