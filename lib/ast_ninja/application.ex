@@ -30,6 +30,8 @@ defmodule AstNinja.Application do
   end
 
   defp load_custom_elixir_tokenizer() do
+    :code.purge(:elixir_tokenizer)
+
     [path] =
       :code.get_path()
       |> Enum.map(&to_string/1)
