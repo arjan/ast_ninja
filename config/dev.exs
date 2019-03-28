@@ -6,7 +6,7 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :ast_explorer, AstExplorerWeb.Endpoint,
+config :ast_ninja, AstNinjaWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -46,13 +46,13 @@ config :ast_explorer, AstExplorerWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :ast_explorer, AstExplorerWeb.Endpoint,
+config :ast_ninja, AstNinjaWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
-      ~r{lib/ast_explorer_web/views/.*(ex)$},
-      ~r{lib/ast_explorer_web/templates/.*(eex)$}
+      ~r{lib/ast_ninja_web/views/.*(ex)$},
+      ~r{lib/ast_ninja_web/templates/.*(eex)$}
     ]
   ]
 

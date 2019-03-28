@@ -1,4 +1,4 @@
-defmodule AstExplorerWeb.ChannelCase do
+defmodule AstNinjaWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -21,7 +21,7 @@ defmodule AstExplorerWeb.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint AstExplorerWeb.Endpoint
+      @endpoint AstNinjaWeb.Endpoint
     end
   end
 

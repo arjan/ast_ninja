@@ -1,9 +1,9 @@
-defmodule AstExplorer.MixProject do
+defmodule AstNinja.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :ast_explorer,
+      app: :ast_ninja,
       version: "0.1.0",
       elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -18,7 +18,7 @@ defmodule AstExplorer.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {AstExplorer.Application, []},
+      mod: {AstNinja.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
