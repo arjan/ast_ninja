@@ -2,18 +2,26 @@ import React, { useReducer } from 'react'
 import AppUI from './AppUI'
 import { channel } from '../socket'
 
+function runParsers({ code, formatter, parsers }) {
+  channel.push('parse', { code, formatter, parsers }).receive('ok', payload => {
+    global.dispatch({ action: 'parseResult', payload })
+    if (payload.formatted) {
+      global.dispatch({ action: 'code', payload: payload.formatted })
+    }
+  })
+}
+
 function reducer(state, { action, payload }) {
   if (action === 'parse') {
-    const { code, parsers } = state
-
-    channel.push('parse', { code, parsers }).receive('ok', payload => {
-      global.dispatch({ action: 'parseResult', payload })
-    })
+    runParsers(state)
   }
 
   else if (action) {
     // simple save action
-    return { ...state, [action]: payload }
+    state = { ...state, [action]: payload }
+    if (action === 'formatter') {
+      runParsers(state)
+    }
   }
   return state
 }
@@ -28,6 +36,7 @@ end
 
 const INITIAL_STATE = {
   code: CODE,
+  formatter: false,
   parseResult: {},
   parsers: null
 }

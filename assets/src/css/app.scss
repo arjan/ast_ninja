@@ -15,11 +15,16 @@ html, body, #root, #root > div.app {
   display: flex;
   flex-direction: column;
 }
-#editor {
+.code-editor {
   flex: 1;
-  height: auto !important;
-  width: auto !important;
-  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  #editor {
+    flex: 1;
+    height: auto !important;
+    width: auto !important;
+    font-size: 14px;
+  }
 }
 
 .raw-output {

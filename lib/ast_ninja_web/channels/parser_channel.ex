@@ -6,13 +6,29 @@ defmodule AstNinjaWeb.Channels.ParserChannel do
     {:ok, socket}
   end
 
-  def handle_in("parse", %{"code" => code, "parsers" => parsers}, socket) do
+  def handle_in(
+        "parse",
+        %{"code" => code, "parsers" => parsers, "formatter" => formatter},
+        socket
+      ) do
     response =
       Enum.map(parsers, fn parser ->
         {parser, Parsers.mod(parser).parse(code)}
       end)
       |> Map.new()
+      |> opt_format(formatter, code)
 
     {:reply, {:ok, response}, socket}
+  end
+
+  defp opt_format(map, false, _code), do: map
+
+  defp opt_format(map, true, code) do
+    try do
+      Map.put(map, :formatted, IO.chardata_to_string(Code.format_string!(code)))
+    rescue
+      SyntaxError ->
+        map
+    end
   end
 end

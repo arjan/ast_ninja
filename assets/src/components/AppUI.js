@@ -23,6 +23,7 @@ const ELEMENT_MAP = {
   safe_ast: [RawOutput, "AST (safe atoms)"],
   json_ast: [JsonAST, "AST (interactive)"],
   filter_demo: [RawOutput, "AST → SQL demo"],
+  to_string: [RawOutput, "AST → Macro.to_string/2 → Code.format_string"],
 }
 
 const INITIAL_LAYOUT = {
