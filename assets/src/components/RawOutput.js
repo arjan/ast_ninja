@@ -31,9 +31,9 @@ export default function({ state, name }) {
   return (
     <div className={classNames('raw-output', { error })}>
       {error && <div className="error">{error}</div>}
-      {warnings && warnings.length && this.renderWarnings(output) || null}
+      {warnings && warnings.length && renderWarnings(output) || null}
       <Ansi>{code || prev[name]}</Ansi>
-      {metadata && this.renderMetadata(output)}
+      {metadata && renderMetadata(output)}
     </div>
   )
 }
