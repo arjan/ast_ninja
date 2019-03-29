@@ -4,9 +4,13 @@ defmodule AstNinja.Parsers.FilterDemo do
   alias AstNinja.FilterDemo, as: Filter
 
   def parse(filter) do
-    with {:ok, ast} <- Filter.parse(filter),
+    with {:ok, preprocessed} <- Filter.preprocess(filter),
+         {:ok, ast} <- Filter.parse(filter),
          {:ok, sql, vars} <- Filter.to_sql(ast) do
       code = [
+        "Preprocessed:\n\n",
+        pretty(preprocessed),
+        "\n\n",
         "AST:\n\n",
         pretty(ast),
         "\n\n",
