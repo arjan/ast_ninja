@@ -14,16 +14,30 @@ function Placeholder() {
   return <div>Placeholder</div>
 }
 
+const CODE_OPTS = [
+  ['existing_atoms_only: true', 'existing_atoms'],
+  ['existing_atoms_only: :safe', 'safe_atoms'],
+  ['formatter metadata', 'formatter_metadata']
+]
+
+function AST(props) {
+  return <RawOutput {...props} opts={CODE_OPTS} />
+}
+
+function Tokenizer(props) {
+  return <RawOutput {...props} opts={CODE_OPTS} />
+}
+
 const ELEMENT_MAP = {
   elixir: [CodeEditor, "Elixir code", CodeSnippetsButton],
-  ast: [RawOutput, "AST"],
-  tokens: [RawOutput, "Tokenizer"],
+  ast: [AST, "AST"],
+  tokens: [Tokenizer, "Tokenizer"],
   existing_atom_tokens: [RawOutput, "Tokenizer (existing atoms)"],
   safe_atom_tokens: [RawOutput, "Tokenizer (safe atoms)"],
-  safe_ast: [RawOutput, "AST (safe atoms)"],
   json_ast: [JsonAST, "AST (interactive)"],
   filter_demo: [RawOutput, "AST → SQL demo"],
   to_string: [RawOutput, "AST → Macro.to_string/2 → Code.format_string"],
+  format_algebra: [RawOutput, "Code.Formatter.to_algebra/2"],
 }
 
 const INITIAL_LAYOUT = {
@@ -133,7 +147,6 @@ export default function(props) {
     if (Extra) {
       controls.push(<Extra key="extra" {...props} />)
     }
-
     controls.push(<Button key="remove" minimal icon="cross" onClick={e => onChange(togglePanel(id, false, mosaic))} />)
 
     return (<MosaicWindow

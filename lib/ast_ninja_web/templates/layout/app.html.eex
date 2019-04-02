@@ -20,6 +20,6 @@
 
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
 
-    <script data-botsquad='{"id":"9e3bcd4e-50c4-4fba-8a32-420702c793e0"}' src="https://bsqd.me/js/widget.js"></script>
+    <!-- <script data-botsquad='{"id":"9e3bcd4e-50c4-4fba-8a32-420702c793e0"}' src="https://bsqd.me/js/widget.js"></script> -->
   </body>
 </html>

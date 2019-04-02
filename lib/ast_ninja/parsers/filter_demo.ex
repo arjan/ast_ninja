@@ -3,7 +3,7 @@ defmodule AstNinja.Parsers.FilterDemo do
 
   alias AstNinja.FilterDemo, as: Filter
 
-  def parse(filter) do
+  def parse(filter, _options) do
     with {:ok, preprocessed} <- Filter.preprocess(filter),
          {:ok, ast} <- Filter.parse(filter),
          {:ok, sql, vars} <- Filter.to_sql(ast) do

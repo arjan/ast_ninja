@@ -49,9 +49,6 @@ html, body, #root, #root > div.app {
   &.error code {
     opacity: 0.3;
   }
-  .bp3-tag {
-    margin-right: 10px;
-  }
 }
 
 .bp3-navbar {
@@ -70,4 +67,11 @@ html, body, #root, #root > div.app {
   }
 
   box-shadow: 0 1px 1px rgba(16, 22, 26, 0.15);
+}
+
+.bp3-callout.metadata {
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 4px;
+  background: transparent;
 }

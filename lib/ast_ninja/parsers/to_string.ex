@@ -1,7 +1,7 @@
 defmodule AstNinja.Parsers.ToString do
   import AstNinja.Parsers
 
-  def parse(code) do
+  def parse(code, _options) do
     {result, _warnings} = gather_warnings(fn -> Code.string_to_quoted(code) end)
 
     case result do
@@ -9,7 +9,8 @@ defmodule AstNinja.Parsers.ToString do
         try do
           formatted =
             ast
-            |> Macro.to_string(&remove_parens_from_locals/2)
+            # |> Macro.to_string(&remove_parens_from_locals/2)
+            |> Macro.to_string()
             |> Code.format_string!()
             |> IO.chardata_to_string()
 

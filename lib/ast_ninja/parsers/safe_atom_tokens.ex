@@ -1,7 +1,7 @@
 defmodule AstNinja.Parsers.SafeAtomTokens do
   import AstNinja.Parsers
 
-  def parse(code) do
+  def parse(code, _options) do
     opts = [existing_atoms_only: :safe]
 
     {result, warnings} =

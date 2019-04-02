@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import classNames from 'classnames'
 import Ansi from 'ansi-to-react'
-import { Callout, Tag } from '@blueprintjs/core'
+import { Callout, Tag, Checkbox } from '@blueprintjs/core'
 
 function renderMetadata({ metadata }) {
   return (
-    <Callout>
-      {Object.keys(metadata).map(k => <Tag large intent="primary" key={k}>{k}: {metadata[k]}</Tag>)}
+    <Callout className="metadata">
+      {Object.keys(metadata).map(k => <Tag intent="primary" key={k}>{k}: {metadata[k]}</Tag>)}
     </Callout>
   )
 }
@@ -21,11 +21,27 @@ function renderWarnings({ warnings }) {
   )
 }
 
+function renderParserOpts(opts, state, name, dispatch) {
+  return (
+    <Callout>
+      {opts.map(([ label, opt ]) =>
+        <Checkbox
+          key={opt}
+          inline
+          checked={!!state[opt]}
+          label={label}
+          onChange={e => dispatch({ action: 'parserOpt', payload: { name, opt, checked: e.target.checked }})}
+        />)
+      }
+    </Callout>
+  )
+}
+
 let prev = {}
 
-export default function({ state, name }) {
+export default function({ state, dispatch, name, opts }) {
   const output = state.parseResult[name] || {}
-  const { code, error, warnings, metadata} = output
+  const { code, error, warnings, metadata } = output
 
   if (!error) prev[name] = code
   return (
@@ -34,6 +50,7 @@ export default function({ state, name }) {
       {warnings && warnings.length && renderWarnings(output) || null}
       <Ansi>{code || prev[name]}</Ansi>
       {metadata && renderMetadata(output)}
+      {opts && renderParserOpts(opts, state.parserOpts[name] || {}, name, dispatch)}
     </div>
   )
 }

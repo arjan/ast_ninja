@@ -1,7 +1,7 @@
 defmodule AstNinja.Parsers.Tokens do
   import AstNinja.Parsers
 
-  def parse(code) do
+  def parse(code, _options) do
     {result, warnings} =
       gather_warnings(fn -> :elixir_tokenizer.tokenize(String.to_charlist(code), 0, []) end)
 

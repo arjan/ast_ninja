@@ -1,9 +1,8 @@
-defmodule AstNinja.Parsers.SafeAst do
+defmodule AstNinja.Parsers.FormatAlgebra do
   import AstNinja.Parsers
 
-  def parse(code) do
-    {result, warnings} =
-      gather_warnings(fn -> Code.string_to_quoted(code, existing_atoms_only: :safe) end)
+  def parse(code, _options) do
+    {result, warnings} = gather_warnings(fn -> Code.Formatter.to_algebra(code) end)
 
     case result do
       {:ok, ast} ->

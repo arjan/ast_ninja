@@ -8,12 +8,12 @@ defmodule AstNinjaWeb.Channels.ParserChannel do
 
   def handle_in(
         "parse",
-        %{"code" => code, "parsers" => parsers, "formatter" => formatter},
+        %{"code" => code, "parsers" => parsers, "formatter" => formatter, "options" => options},
         socket
       ) do
     response =
       Enum.map(parsers, fn parser ->
-        {parser, Parsers.mod(parser).parse(code)}
+        {parser, Parsers.mod(parser).parse(code, options[parser] || %{})}
       end)
       |> Map.new()
       |> opt_format(formatter, code)

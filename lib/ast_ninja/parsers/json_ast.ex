@@ -1,7 +1,7 @@
 defmodule AstNinja.Parsers.JsonAst do
   import AstNinja.Parsers
 
-  def parse(code) do
+  def parse(code, _options) do
     {result, warnings} = gather_warnings(fn -> Code.string_to_quoted(code) end)
 
     case result do

@@ -1,5 +1,5 @@
 defmodule AstNinja.Parsers do
-  @parsers ~w(safe_atom_tokens existing_atom_tokens safe_ast ast tokens json_ast filter_demo to_string)
+  @parsers ~w(safe_atom_tokens existing_atom_tokens ast tokens json_ast filter_demo to_string format_algebra)
 
   def parsers() do
     @parsers
