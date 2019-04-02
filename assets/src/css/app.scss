@@ -38,13 +38,27 @@ html, body, #root, #root > div.app {
     font-weight: 500;
     color: white;
   }
-  code {
+  .main {
     flex: 1;
-    overflow: auto;
-    padding: 12px;
-    white-space: pre-wrap;
-    font-family: monospace;
-    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    code {
+      flex: 1;
+      overflow: auto;
+      padding: 12px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .metadata {
+      position: absolute;
+      bottom: 4px;
+      right: 20px;
+    }
+
   }
   &.error code {
     opacity: 0.3;
@@ -67,11 +81,4 @@ html, body, #root, #root > div.app {
   }
 
   box-shadow: 0 1px 1px rgba(16, 22, 26, 0.15);
-}
-
-.bp3-callout.metadata {
-  display: flex;
-  flex-direction: row-reverse;
-  padding: 4px;
-  background: transparent;
 }

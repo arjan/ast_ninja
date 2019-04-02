@@ -5,9 +5,9 @@ import { Callout, Tag, Checkbox } from '@blueprintjs/core'
 
 function renderMetadata({ metadata }) {
   return (
-    <Callout className="metadata">
+    <div className="metadata">
       {Object.keys(metadata).map(k => <Tag intent="primary" key={k}>{k}: {metadata[k]}</Tag>)}
-    </Callout>
+    </div>
   )
 }
 
@@ -48,8 +48,10 @@ export default function({ state, dispatch, name, opts }) {
     <div className={classNames('raw-output', { error })}>
       {error && <div className="error">{error}</div>}
       {warnings && warnings.length && renderWarnings(output) || null}
-      <Ansi>{code || prev[name]}</Ansi>
-      {metadata && renderMetadata(output)}
+      <div className="main">
+        <Ansi>{code || prev[name]}</Ansi>
+        {metadata && renderMetadata(output)}
+      </div>
       {opts && renderParserOpts(opts, state.parserOpts[name] || {}, name, dispatch)}
     </div>
   )
