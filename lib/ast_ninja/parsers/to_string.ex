@@ -2,7 +2,8 @@ defmodule AstNinja.Parsers.ToString do
   import AstNinja.Parsers
 
   def parse(code, _options) do
-    {result, _warnings} = gather_warnings(fn -> Code.string_to_quoted(code) end)
+    {result, _warnings} =
+      gather_warnings(fn -> Code.string_to_quoted(code, formatter_metadata: true) end)
 
     case result do
       {:ok, ast} ->
@@ -115,6 +116,10 @@ defmodule AstNinja.Parsers.ToString do
                            import_config: 1
                          ]
                          |> Keyword.keys()
+
+  def locals_without_parens() do
+    @locals_without_parens
+  end
 
   def remove_parens_from_locals({fun, _, _}, str) when fun in @locals_without_parens do
     {:ok, r} = Regex.compile("^#{fun}\\((.*?)\\)(,?) do")

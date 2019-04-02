@@ -8,14 +8,18 @@ defmodule AstNinja.AstMacroTest do
       @operators ~w(+ - * /)a
 
       defastfilter :parse do
+        # constant integer values
         n when is_integer(n) -> n
+        # allowed operators
         {op, _, _} = n when op in @operators -> n
+        # allow variables
         {var, _, nil} = n when is_atom(var) -> n
       end
     end
 
     {:ok, ast} = Code.string_to_quoted("1 + 34 * x")
-    {_filtered, :ok} = Macro.prewalk(ast, :ok, &MyIntegerLanguage.parse/2)
+    {^ast, :ok} = Macro.prewalk(ast, :ok, &MyIntegerLanguage.parse/2)
+
     # IO.inspect(filtered, label: "filtered")
   end
 end
