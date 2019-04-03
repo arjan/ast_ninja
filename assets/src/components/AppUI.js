@@ -42,6 +42,7 @@ const ELEMENT_MAP = {
   filter_demo: [RawOutput, "AST → SQL demo"],
   to_string: [RawOutput, "AST → Macro.to_string/2 → Code.format_string"],
   format_algebra: [RawOutput, "Code.Formatter.to_algebra/2"],
+  int_parser: [RawOutput, "leex / yecc demo (integer expressions)"],
 }
 
 const INITIAL_LAYOUT = {
