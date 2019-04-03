@@ -1,3 +1,6 @@
+/src/int_lexer.erl
+/src/int_parser.erl
+
 # The directory Mix will write compiled artifacts to.
 /_build/
 
