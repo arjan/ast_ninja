@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { Mosaic, MosaicWindow } from 'react-mosaic-component'
 import { Navbar, Button, Checkbox, Popover, Menu, MenuItem } from '@blueprintjs/core'
+
 import '@blueprintjs/core/lib/css/blueprint.css'
 import 'react-mosaic-component/react-mosaic-component.css'
 
@@ -16,12 +17,15 @@ function Placeholder() {
 
 const CODE_OPTS = [
   ['existing_atoms_only: true', 'existing_atoms'],
+  ['formatter metadata', 'formatter_metadata'],
   ['existing_atoms_only: :safe', 'safe_atoms'],
-  ['formatter metadata', 'formatter_metadata']
 ]
 
 function AST(props) {
-  return <RawOutput {...props} opts={CODE_OPTS} />
+  let opts = [...CODE_OPTS]
+  opts = opts.splice(0, props.state.optIndex)
+
+  return <RawOutput {...props} opts={opts} />
 }
 
 function Tokenizer(props) {

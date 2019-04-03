@@ -52,7 +52,7 @@ export default function({ state, dispatch, name, opts }) {
         <Ansi>{code || prev[name]}</Ansi>
         {metadata && renderMetadata(output)}
       </div>
-      {opts && renderParserOpts(opts, state.parserOpts[name] || {}, name, dispatch)}
+      {opts && opts.length > 0 && renderParserOpts(opts, state.parserOpts[name] || {}, name, dispatch)}
     </div>
   )
 }
