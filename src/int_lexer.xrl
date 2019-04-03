@@ -1,6 +1,6 @@
 Definitions.
 
-INT   = [0-9]
+INT   = [0-9]+
 OP   = [+*-/]
 WS  = ([\000-\s])
 
