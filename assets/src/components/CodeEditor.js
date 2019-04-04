@@ -31,6 +31,7 @@ export default class extends React.Component {
     return (
       <div className="code-editor">
         <AceEditor
+          readonly
           mode="elixir"
           theme="textmate"
           value={state.code}

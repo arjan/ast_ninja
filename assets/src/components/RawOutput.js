@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import classNames from 'classnames'
 import Ansi from 'ansi-to-react'
-import { Callout, Tag, Checkbox } from '@blueprintjs/core'
+import { Callout, Tag, Checkbox, RadioGroup, Radio } from '@blueprintjs/core'
+
+import AceEditor from 'react-ace'
+import 'brace/mode/elixir'
+import 'brace/theme/textmate'
 
 function renderMetadata({ metadata }) {
   return (
@@ -21,17 +25,32 @@ function renderWarnings({ warnings }) {
   )
 }
 
+function renderRadios(label, opt, state, name, dispatch) {
+  return (
+    <RadioGroup
+      key={label}
+      label={label}
+      inline
+      onChange={e => dispatch({ action: 'parserOpt', payload: { name, opt: label, value: e.target.value }})}
+      selectedValue={state[label] || opt[0]}
+    >
+      {opt.map((o, i) => <Radio key={i} label={o} value={o} />)}
+    </RadioGroup>
+  )
+}
+
 function renderParserOpts(opts, state, name, dispatch) {
   return (
     <Callout>
       {opts.map(([ label, opt ]) =>
-        <Checkbox
-          key={opt}
-          inline
-          checked={!!state[opt]}
-          label={label}
-          onChange={e => dispatch({ action: 'parserOpt', payload: { name, opt, checked: e.target.checked }})}
-        />)
+        typeof opt === 'string'
+        ? <Checkbox
+            key={opt}
+            inline
+            checked={!!state[opt]}
+            label={label}
+            onChange={e => dispatch({ action: 'parserOpt', payload: { name, opt, checked: e.target.checked }})}
+        /> : renderRadios(label, opt, state, name, dispatch))
       }
     </Callout>
   )
@@ -39,7 +58,26 @@ function renderParserOpts(opts, state, name, dispatch) {
 
 let prev = {}
 
-export default function({ state, dispatch, name, opts }) {
+function renderEditor(code) {
+  return (
+    <div className="code-editor">
+      <AceEditor
+        readOnly
+        wrapEnabled
+        highlightActiveLine={false}
+        mode="elixir"
+        theme="textmate"
+        value={code}
+        name="editor"
+        tabSize={2}
+        useSoftTabs
+        editorProps={{ $blockScrolling: Infinity }}
+      />
+    </div>
+  )
+}
+
+export default function({ state, dispatch, name, isElixir, opts }) {
   const output = state.parseResult[name] || {}
   const { code, error, warnings, metadata } = output
 
@@ -49,7 +87,7 @@ export default function({ state, dispatch, name, opts }) {
       {error && <div className="error">{error}</div>}
       {warnings && warnings.length && renderWarnings(output) || null}
       <div className="main">
-        <Ansi>{code || prev[name]}</Ansi>
+        {isElixir ? renderEditor(code || prev[name]) : <Ansi>{code || prev[name]}</Ansi>}
         {metadata && renderMetadata(output)}
       </div>
       {opts && opts.length > 0 && renderParserOpts(opts, state.parserOpts[name] || {}, name, dispatch)}

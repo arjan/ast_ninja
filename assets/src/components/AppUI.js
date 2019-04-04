@@ -32,6 +32,14 @@ function Tokenizer(props) {
   return <RawOutput {...props} opts={CODE_OPTS} />
 }
 
+
+const FMT_OPTS = [
+  ['Method', ['naive', 'naive + formatter', 'formatter_metadata', 'secret_sauce']]
+]
+function ToString(props) {
+  return <RawOutput {...props} opts={FMT_OPTS} isElixir />
+}
+
 const ELEMENT_MAP = {
   elixir: [CodeEditor, "Elixir code", CodeSnippetsButton],
   ast: [AST, "AST"],
@@ -40,7 +48,7 @@ const ELEMENT_MAP = {
   safe_atom_tokens: [RawOutput, "Tokenizer (safe atoms)"],
   json_ast: [JsonAST, "AST (interactive)"],
   filter_demo: [RawOutput, "AST → SQL demo"],
-  to_string: [RawOutput, "AST → Macro.to_string/2 → Code.format_string"],
+  to_string: [ToString, "AST to String"],
   format_algebra: [RawOutput, "Code.Formatter.to_algebra/2"],
   int_parser: [RawOutput, "leex / yecc demo (integer expressions)"],
 }

@@ -7,25 +7,25 @@ function runParsers({ code, formatter, parsers, parserOpts }) {
   channel.push('parse', { code, formatter, parsers, options: parserOpts }).receive('ok', payload => {
     global.dispatch({ action: 'parseResult', payload })
     if (payload.formatted) {
-      global.dispatch({ action: 'code', payload: payload.formatted })
+      global.dispatch({ action: 'code', payload: payload.formatted, force: code !== payload.formatted })
     }
   })
 }
 
-function reducer(state, { action, payload }) {
+function reducer(state, { action, payload, force }) {
   if (action === 'parse') {
     runParsers(state)
   }
   if (action === 'parserOpt') {
-    const { name, opt, checked } = payload
-    state = { ...state, parserOpts: { ...state.parserOpts, [name]: { ...state.parserOpts[name], [opt]: checked } } }
+    const { name, opt, value, checked } = payload
+    state = { ...state, parserOpts: { ...state.parserOpts, [name]: { ...state.parserOpts[name], [opt]: value || checked } } }
     runParsers(state)
   }
 
   else if (action) {
     // simple save action
     state = { ...state, [action]: payload }
-    if (action === 'formatter') {
+    if (action === 'formatter' || force) {
       runParsers(state)
     }
   }
