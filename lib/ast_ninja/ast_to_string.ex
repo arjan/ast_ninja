@@ -29,6 +29,8 @@ defmodule AstNinja.AstToString do
     with {:ok, tokens} <- :elixir.string_to_tokens(charlist, line, file, tokenizer_options),
          {:ok, forms} <- :elixir.tokens_to_quoted(tokens, file, columns: true) do
       Macro.to_string(forms, &format_ast_string/2)
+      |> Code.format_string!()
+      |> IO.chardata_to_string()
     end
   after
     Process.delete(:code_formatter_comments)

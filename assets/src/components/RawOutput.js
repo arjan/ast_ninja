@@ -79,11 +79,12 @@ function renderEditor(code) {
 
 export default function({ state, dispatch, name, isElixir, opts }) {
   const output = state.parseResult[name] || {}
-  const { code, error, warnings, metadata } = output
+  const { code, error, warnings, metadata, equal } = output
 
   if (!error) prev[name] = code
   return (
     <div className={classNames('raw-output', { error })}>
+      {equal ? <Callout icon="tick" intent="success">Output equal to input</Callout> : null}
       {error && <div className="error">{error}</div>}
       {warnings && warnings.length && renderWarnings(output) || null}
       <div className="main">

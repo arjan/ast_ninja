@@ -12,7 +12,7 @@ defmodule AstNinja.Parsers.ToString do
       {:ok, ast} ->
         try do
           formatted = format_ast(options["Method"], ast, code)
-          %{code: formatted, warnings: warnings}
+          %{code: formatted, warnings: warnings, equal: code == formatted}
         rescue
           e in SyntaxError ->
             %{error: Exception.message(e)}
