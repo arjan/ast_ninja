@@ -33,7 +33,7 @@ defmodule AstNinja.AstToString do
 
       {_ast, fmt_metadata_lookup} =
         Macro.prewalk(forms2, [], fn
-          {_, m, _} = n, acc -> {n, [{metadata_key(m), m} | acc]}
+          {_, m, a} = n, acc -> {n, [{metadata_key(m), m |> Keyword.put(:ast, n)} | acc]}
           n, acc -> {n, acc}
         end)
 
@@ -43,7 +43,14 @@ defmodule AstNinja.AstToString do
         Macro.prewalk(forms, comments, fn
           {a, m, b}, comments ->
             k = metadata_key(m)
-            {c, remaining} = Enum.split_with(comments, &(&1[:line] < m[:line]))
+
+            {c, remaining} =
+              if m[:line] != nil do
+                Enum.split_with(comments, &(&1[:line] < m[:line]))
+              else
+                {[], comments}
+              end
+
             metadata = fmt_metadata_lookup[k] |> Keyword.drop(~w(line column)a)
 
             {{a,
@@ -74,9 +81,13 @@ defmodule AstNinja.AstToString do
   Format code from the AST, including comments
   """
   def to_string(rich_ast) do
+    Process.put(:current_line, 1)
+
     Macro.to_string(rich_ast, &format_ast_string/2)
     |> Code.format_string!()
     |> IO.chardata_to_string()
+  after
+    Process.delete(:current_line)
   end
 
   def format_ast_string({_, meta, _} = ast, str) do
@@ -89,7 +100,22 @@ defmodule AstNinja.AstToString do
           (c |> Enum.reverse() |> Enum.map(& &1[:comment]) |> Enum.join("\n")) <> "\n"
       end
 
-    comments <> remove_parens_from_locals(ast, str)
+    newlines =
+      if meta[:line] != nil && meta[:line] - Process.get(:current_line) > 1 do
+        d =
+          meta[:line] - Process.get(:current_line) -
+            (String.split(comments, "\n") |> Enum.count())
+
+        String.duplicate("\n", d)
+      else
+        ""
+      end
+
+    if meta[:line] != nil do
+      Process.put(:current_line, meta[:line])
+    end
+
+    newlines <> comments <> remove_parens_from_locals(ast, str)
   end
 
   def format_ast_string(_ast, str) do
@@ -98,7 +124,6 @@ defmodule AstNinja.AstToString do
 
   def remove_parens_from_locals({fun, m, _}, str) when is_atom(fun) do
     fmt = m[:_formatter_metadata]
-    IO.inspect(fmt, label: "fmt")
 
     if fmt[:no_parens] do
       {:ok, r} = Regex.compile("^#{fun}\\((.*?)\\)")
@@ -106,9 +131,40 @@ defmodule AstNinja.AstToString do
     else
       str
     end
+    |> reformat_do(fmt[:ast])
   end
 
   def remove_parens_from_locals(_ast, str) do
     str
   end
+
+  @blocktypes ~w(do else after catch)a
+
+  def reformat_do(str, {_, _, l}) when is_list(l) do
+    case List.last(l) do
+      x when is_list(x) ->
+        Enum.reduce(x, str, fn
+          {{:__block__, m, [type]}, _}, str when type in @blocktypes ->
+            case m[:format] do
+              :keyword ->
+                # convert block notation to keyword notation
+                {:ok, re} = Regex.compile("^(.*?)\\s#{type}\\n")
+
+                Regex.replace(re, str, "\\1, #{type}: \\2")
+                |> String.trim_trailing("end")
+
+              _ ->
+                str
+            end
+
+          x, str ->
+            str
+        end)
+
+      _ ->
+        str
+    end
+  end
+
+  def reformat_do(str, _), do: str
 end

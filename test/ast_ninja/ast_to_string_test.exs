@@ -3,6 +3,14 @@ defmodule AstNinja.AstToStringTest do
 
   alias AstNinja.AstToString
 
+  def equal(code) do
+    new =
+      AstToString.string_to_quoted(code)
+      |> AstToString.to_string()
+
+    assert String.trim(new) == String.trim(code)
+  end
+
   @code """
   # some comment
   def foo do
@@ -13,15 +21,46 @@ defmodule AstNinja.AstToStringTest do
   end
   """
 
-  test "to_string" do
-    AstToString.string_to_quoted(@code)
-    |> IO.inspect(label: "xx")
-    |> AstToString.to_string()
-    |> IO.puts()
-  end
-
   test "string_to_quoted" do
-    AstToString.string_to_quoted(@code)
-    # |> IO.inspect(label: "x")
+    # equal("a")
+    # equal("1 + 2")
+
+    # equal("""
+    # 1 + 2
+    # """)
+
+    equal("""
+    a
+
+    b
+    """)
+
+    equal("""
+    a
+    # xx
+    b
+    """)
+
+    equal("""
+    a
+
+    b
+
+    c
+    d
+    #  xx
+    e
+    """)
+
+    equal("""
+    if x do
+      # foo
+      bar("d")
+    end
+    """)
+
+    equal("""
+    if x, do: bar("d"), else: x
+    """)
   end
 end
