@@ -63,7 +63,7 @@ class MyHotkeys extends React.Component {
         global={true}
         combo="mod + i"
         label="Increase the option index"
-        onKeyDown={() => dispatch({ action: 'optIndex', payload: (state.optIndex + 1) % 4 })}
+        onKeyDown={() => dispatch({ action: 'optIndex', payload: (state.optIndex + 1) % 5 })}
       />
     </Hotkeys>;
   }

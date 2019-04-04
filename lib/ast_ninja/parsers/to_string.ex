@@ -48,6 +48,7 @@ defmodule AstNinja.Parsers.ToString do
   end
 
   defp format_ast("secret_sauce", _ast, code) do
-    AstNinja.AstToString.back_to_string(code)
+    AstNinja.AstToString.string_to_quoted(code)
+    |> AstNinja.AstToString.to_string()
   end
 end
