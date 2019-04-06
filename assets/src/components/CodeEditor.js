@@ -27,11 +27,12 @@ export default class extends React.Component {
 
   render() {
     const { state, dispatch } = this.props
+    const { showOptions } = state
 
     return (
       <div className="code-editor">
         <AceEditor
-          readonly
+          ref={e => this.editorComponent = e}
           mode="elixir"
           theme="textmate"
           value={state.code}
@@ -41,12 +42,25 @@ export default class extends React.Component {
           useSoftTabs
           editorProps={{ $blockScrolling: Infinity }}
         />
-        <Navbar>
+        {showOptions
+        ? <Navbar>
           <Navbar.Group align="right">
             <Checkbox checked={state.formatter} onChange={e => dispatch({ action: 'formatter', payload: e.target.checked })} label="Auto-format" />
           </Navbar.Group>
-        </Navbar>
+        </Navbar> : null}
       </div>
     )
   }
+
+  componentDidMount() {
+    const { editor } = this.editorComponent
+    const { dispatch } = this.props
+
+    editor.commands.addCommand({
+      name: "nextLayout",
+      bindKey: {win: "Ctrl-Alt-o", mac: "Command-Alt-o"},
+      exec: () => dispatch({ action: 'showOptions', payload: !this.props.state.showOptions })
+    })
+  }
+
 }

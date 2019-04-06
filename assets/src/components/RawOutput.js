@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import classNames from 'classnames'
 import Ansi from 'ansi-to-react'
-import { Callout, Tag, Checkbox, RadioGroup, Radio } from '@blueprintjs/core'
+import { Navbar, Callout, Tag, Checkbox, RadioGroup, Radio } from '@blueprintjs/core'
 
 import AceEditor from 'react-ace'
 import 'brace/mode/elixir'
@@ -41,7 +41,8 @@ function renderRadios(label, opt, state, name, dispatch) {
 
 function renderParserOpts(opts, state, name, dispatch) {
   return (
-    <Callout>
+    <Navbar>
+      <Navbar.Group>
       {opts.map(([ label, opt ]) =>
         typeof opt === 'string'
         ? <Checkbox
@@ -52,7 +53,8 @@ function renderParserOpts(opts, state, name, dispatch) {
             onChange={e => dispatch({ action: 'parserOpt', payload: { name, opt, checked: e.target.checked }})}
         /> : renderRadios(label, opt, state, name, dispatch))
       }
-    </Callout>
+      </Navbar.Group>
+    </Navbar>
   )
 }
 
@@ -80,6 +82,7 @@ function renderEditor(code) {
 export default function({ state, dispatch, name, isElixir, opts }) {
   const output = state.parseResult[name] || {}
   const { code, error, warnings, metadata, equal } = output
+  const { showOptions } = state
 
   if (!error) prev[name] = code
   return (
@@ -91,7 +94,7 @@ export default function({ state, dispatch, name, isElixir, opts }) {
         {isElixir ? renderEditor(code || prev[name]) : <Ansi>{code || prev[name]}</Ansi>}
         {metadata && renderMetadata(output)}
       </div>
-      {opts && opts.length > 0 && renderParserOpts(opts, state.parserOpts[name] || {}, name, dispatch)}
+      {showOptions && opts && opts.length > 0 && renderParserOpts(opts, state.parserOpts[name] || {}, name, dispatch)}
     </div>
   )
 }

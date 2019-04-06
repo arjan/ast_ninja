@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Mosaic, MosaicWindow } from 'react-mosaic-component'
-import { Navbar, Button, Checkbox, Popover, Menu, MenuItem } from '@blueprintjs/core'
+import { Switch, Navbar, Button, Checkbox, Popover, Menu, MenuItem } from '@blueprintjs/core'
 
 import '@blueprintjs/core/lib/css/blueprint.css'
 import 'react-mosaic-component/react-mosaic-component.css'
@@ -18,18 +18,21 @@ const CODE_OPTS = [
   ['existing_atoms_only: true', 'existing_atoms'],
   ['formatter metadata', 'formatter_metadata'],
   ['existing_atoms_only: :safe', 'safe_atoms'],
-  ['Enriched AST', 'rich_ast'],
+//  ['Enriched AST', 'rich_ast'],
 ]
 
 function AST(props) {
-  let opts = [...CODE_OPTS]
-  opts = opts.splice(0, props.state.optIndex)
-
-  return <RawOutput {...props} opts={opts} />
+  return <RawOutput {...props} opts={CODE_OPTS} />
 }
 
+const TOKEN_OPTS = [
+  ['existing_atoms_only: true', 'existing_atoms'],
+  ['dont check terminators', 'check_terminators'],
+  ['existing_atoms_only: :safe', 'safe_atoms'],
+]
+
 function Tokenizer(props) {
-  return <RawOutput {...props} />
+  return <RawOutput {...props} opts={TOKEN_OPTS} />
 }
 
 
@@ -44,8 +47,6 @@ const ELEMENT_MAP = {
   elixir: [CodeEditor, "Elixir code", CodeSnippetsButton],
   ast: [AST, "AST"],
   tokens: [Tokenizer, "Tokenizer"],
-  existing_atom_tokens: [RawOutput, "Tokenizer (existing atoms)"],
-  safe_atom_tokens: [RawOutput, "Tokenizer (safe atoms)"],
   json_ast: [JsonAST, "AST (interactive)"],
   filter_demo: [RawOutput, "AST → SQL demo"],
   to_string: [ToString, "AST to String"],
@@ -181,6 +182,11 @@ export default function(props) {
           </Navbar.Heading>
         </Navbar.Group>
         <Navbar.Group align="right">
+          <Switch
+            checked={props.state.showOptions}
+            label="Show options"
+            onChange={e => dispatch({ action: 'showOptions', payload: e.target.checked })}
+          />
           {renderRemainingButtons(mosaic, onChange)}
         </Navbar.Group>
       </Navbar>

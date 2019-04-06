@@ -2,7 +2,6 @@ import React, { useReducer } from 'react'
 import AppUI from './AppUI'
 import { channel } from '../socket'
 import { LAYOUTS } from '../layouts'
-import { Hotkey, Hotkeys, HotkeysTarget } from "@blueprintjs/core";
 
 function runParsers({ code, formatter, parsers, parserOpts }) {
   channel.push('parse', { code, formatter, parsers, options: parserOpts }).receive('ok', payload => {
@@ -39,32 +38,12 @@ const INITIAL_STATE = {
   parseResult: {},
   parsers: null,
   parserOpts: {},
-  optIndex: 0,
-  mosaic: LAYOUTS[0]
+  mosaic: LAYOUTS[0],
+  showOptions: false,
 }
 
 const global = {
   dispatch: null
-}
-
-@HotkeysTarget
-class MyHotkeys extends React.Component {
-  renderHotkeys() {
-    const { state, dispatch } = this.props
-
-    return <Hotkeys>
-      <Hotkey
-        global={true}
-        combo="mod + i"
-        label="Increase the option index"
-        onKeyDown={() => dispatch({ action: 'optIndex', payload: (state.optIndex + 1) % 5 })}
-      />
-    </Hotkeys>;
-  }
-
-  render() {
-    return this.props.children
-  }
 }
 
 export default function() {
@@ -72,8 +51,6 @@ export default function() {
   global.dispatch = dispatch
 
   return (
-    <MyHotkeys state={state} dispatch={dispatch}>
-      <AppUI state={state} dispatch={dispatch} />
-    </MyHotkeys>
+    <AppUI state={state} dispatch={dispatch} />
   )
 }
