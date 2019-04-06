@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react'
 import AppUI from './AppUI'
 import { channel } from '../socket'
+import { LAYOUTS } from '../layouts'
 import { Hotkey, Hotkeys, HotkeysTarget } from "@blueprintjs/core";
 
 function runParsers({ code, formatter, parsers, parserOpts }) {
@@ -39,6 +40,7 @@ const INITIAL_STATE = {
   parsers: null,
   parserOpts: {},
   optIndex: 0,
+  mosaic: LAYOUTS[0]
 }
 
 const global = {

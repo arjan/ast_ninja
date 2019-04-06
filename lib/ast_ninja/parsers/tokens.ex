@@ -3,11 +3,16 @@ defmodule AstNinja.Parsers.Tokens do
 
   def parse(code, _options) do
     {result, warnings} =
-      gather_warnings(fn -> :elixir_tokenizer.tokenize(String.to_charlist(code), 0, []) end)
+      gather_warnings(fn ->
+        :elixir_tokenizer.tokenize(String.to_charlist(code), 0, [])
+      end)
 
     case result do
       {:ok, data} ->
         %{code: pretty(data), warnings: warnings}
+
+      {:error, {_, _, {message, extra}, _}, _, _} = e ->
+        %{error: IO.chardata_to_string([message, extra])}
 
       {:error, {_, _, message, _}, _, _} ->
         %{error: IO.chardata_to_string(message)}

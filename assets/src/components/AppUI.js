@@ -5,7 +5,6 @@ import { Navbar, Button, Checkbox, Popover, Menu, MenuItem } from '@blueprintjs/
 import '@blueprintjs/core/lib/css/blueprint.css'
 import 'react-mosaic-component/react-mosaic-component.css'
 
-import { useLocalStorage } from '../hooks'
 import CodeEditor from './CodeEditor'
 import RawOutput from './RawOutput'
 import JsonAST from './JsonAST'
@@ -30,7 +29,7 @@ function AST(props) {
 }
 
 function Tokenizer(props) {
-  return <RawOutput {...props} opts={CODE_OPTS} />
+  return <RawOutput {...props} />
 }
 
 
@@ -138,11 +137,12 @@ function renderRemainingButtons(mosaic, onChange) {
 }
 
 export default function(props) {
-  const [mosaic, setMosaic] = useLocalStorage('mosaic', INITIAL_LAYOUT);
+  const { dispatch } = props
+  const { mosaic } = props.state
 
   const dispatchParsers = (mosaic) => {
-    props.dispatch({ action: 'parsers', payload: getEnabledPanels(mosaic).filter(p => p !== 'elixir') })
-    props.dispatch({ action: 'parse' })
+    dispatch({ action: 'parsers', payload: getEnabledPanels(mosaic).filter(p => p !== 'elixir') })
+    dispatch({ action: 'parse' })
   }
 
   useEffect(() => {
@@ -151,7 +151,7 @@ export default function(props) {
 
   const onChange = mosaic => {
     dispatchParsers(mosaic)
-    setMosaic(mosaic)
+    dispatch({ action: 'mosaic', payload: mosaic })
   }
 
   const renderTile = (id, path) => {
@@ -187,7 +187,7 @@ export default function(props) {
 
       <Mosaic
         renderTile={renderTile}
-        onChange={setMosaic}
+        onChange={payload => dispatch({ action: 'mosaic', payload })}
         value={mosaic}
       />
     </div>
