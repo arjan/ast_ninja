@@ -32,16 +32,8 @@ function reducer(state, { action, payload, force }) {
   return state
 }
 
-const CODE = `# this is a demo
-defmodule Greeting do
-  def hello do
-    IO.puts "Hello, world!"
-  end
-end
-`
-
 const INITIAL_STATE = {
-  code: CODE,
+  code: '',
   formatter: false,
   parseResult: {},
   parsers: null,
