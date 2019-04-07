@@ -8,8 +8,12 @@ import 'react-mosaic-component/react-mosaic-component.css'
 import CodeEditor from './CodeEditor'
 import RawOutput from './RawOutput'
 import JsonAST from './JsonAST'
+import HelpDialog from './HelpDialog'
 import CodeSnippetsButton from './CodeSnippetsButton'
 import { getEnabledPanels } from './App'
+
+const REPO_LINK = `https://github.com/arjan/ast_ninja`
+const SLIDES_LINK = `https://docs.google.com/presentation/d/15_xKuL_H4Eu-EkGarxVixCk192858avE1ef1gmcVKoc/edit?usp=sharing`
 
 function Placeholder() {
   return <div>Placeholder</div>
@@ -19,7 +23,7 @@ const CODE_OPTS = [
   ['existing_atoms_only: true', 'existing_atoms'],
   ['formatter metadata', 'formatter_metadata'],
   ['existing_atoms_only: :safe', 'safe_atoms'],
-//  ['Enriched AST', 'rich_ast'],
+  //  ['Enriched AST', 'rich_ast'],
 ]
 
 function AST(props) {
@@ -160,6 +164,11 @@ export default function(props) {
           </Navbar.Heading>
         </Navbar.Group>
         <Navbar.Group align="right">
+          <Button onClick={() => window.open(SLIDES_LINK)} icon="presentation" text="Presentation slides" minimal />
+          <Button onClick={() => window.open(REPO_LINK)} icon="globe" text="Github" minimal />
+          <Button onClick={() => dispatch({ action: 'help', payload: true })} icon="help" minimal />
+
+          <Navbar.Divider />
           <Switch
             checked={props.state.showOptions}
             label="Show options"
@@ -174,6 +183,7 @@ export default function(props) {
         onChange={payload => dispatch({ action: 'mosaic', payload })}
         value={mosaic}
       />
+      {props.state.help ? <HelpDialog {...props} /> : null}
     </div>
   )
 }

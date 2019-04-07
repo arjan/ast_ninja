@@ -70,6 +70,7 @@ const INITIAL_STATE = {
   parserOpts: {},
   mosaic: LAYOUTS[0],
   showOptions: false,
+  help: false
 }
 
 const global = {
