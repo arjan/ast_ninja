@@ -200,9 +200,9 @@ end
 const SNIPPETS = [
   ['Elixir module', `# this is a demo
 defmodule Greeting do
-def hello do
-IO.puts "Hello, world!"
-end
+  def hello do
+    IO.puts "Hello, world!"
+  end
 end
 `],
   ['Bubblescript', `@intent greeting(match: "hello|hallo|hi|hey|wazzup")
