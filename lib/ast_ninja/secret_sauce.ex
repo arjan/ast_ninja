@@ -1,4 +1,4 @@
-defmodule AstNinja.AstToString do
+defmodule AstNinja.SecretSauce do
   @moduledoc """
   Experimentation with interleaving gathered source code comments back into the parsed code.
   """

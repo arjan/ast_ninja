@@ -8,7 +8,7 @@ defmodule AstNinja.Parsers.Ast do
       gather_warnings(fn ->
         case options["rich_ast"] do
           true ->
-            {:ok, AstNinja.AstToString.string_to_quoted(code, opts)}
+            {:ok, AstNinja.SecretSauce.string_to_quoted(code, opts)}
 
           _ ->
             Code.string_to_quoted(code, opts)

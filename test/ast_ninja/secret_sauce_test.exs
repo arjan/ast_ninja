@@ -1,12 +1,12 @@
-defmodule AstNinja.AstToStringTest do
+defmodule AstNinja.SecretSauceTest do
   use ExUnit.Case
 
-  alias AstNinja.AstToString
+  alias AstNinja.SecretSauce
 
   def equal(code) do
     new =
-      AstToString.string_to_quoted(code)
-      |> AstToString.to_string()
+      SecretSauce.string_to_quoted(code)
+      |> SecretSauce.to_string()
 
     assert String.trim(new) == String.trim(code)
   end
