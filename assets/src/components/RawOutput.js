@@ -90,7 +90,7 @@ export default function({ state, dispatch, name, isElixir, opts }) {
       {warnings && warnings.length && renderWarnings(output) || null}
       <div className="main">
         {isElixir ? renderEditor(code || prev[name]) : <Ansi>{code || prev[name]}</Ansi>}
-        {metadata && renderMetadata(output)}
+        {showOptions && metadata && renderMetadata(output)}
       </div>
       {showOptions && opts && opts.length > 0 && renderParserOpts(opts, state.parserOpts[name] || {}, name, dispatch)}
     </div>
