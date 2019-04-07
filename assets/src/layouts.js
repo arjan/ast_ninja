@@ -13,6 +13,7 @@ export const LAYOUTS = [
   panel('tokens'),
   panel('to_string'),
   panel('filter_demo'),
+  'elixir',
   panel('int_parser'),
   panel('json_ast'),
 ]
