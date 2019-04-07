@@ -9,6 +9,7 @@ import CodeEditor from './CodeEditor'
 import RawOutput from './RawOutput'
 import JsonAST from './JsonAST'
 import CodeSnippetsButton from './CodeSnippetsButton'
+import { getEnabledPanels } from './App'
 
 function Placeholder() {
   return <div>Placeholder</div>
@@ -44,10 +45,10 @@ function ToString(props) {
 }
 
 const ELEMENT_MAP = {
-  elixir: [CodeEditor, "Elixir code", CodeSnippetsButton],
+  elixir: [CodeEditor, "Source code", CodeSnippetsButton],
   ast: [AST, "AST"],
   tokens: [Tokenizer, "Tokenizer"],
-  json_ast: [JsonAST, "AST (interactive)"],
+  json_ast: [JsonAST, "AST as JSON"],
   filter_demo: [RawOutput, "AST → SQL demo"],
   to_string: [ToString, "AST to String"],
   format_algebra: [RawOutput, "Code.Formatter.to_algebra/2"],
@@ -91,28 +92,6 @@ function togglePanel(name, show, mosaic) {
   }
 }
 
-function getEnabledPanels(mosaic) {
-  const rendered = []
-  if (typeof mosaic === 'string') {
-    rendered.push(mosaic)
-  } else {
-    const traverse = ({ first, second }) => {
-      if (typeof first === 'string') {
-        rendered.push(first)
-      } else {
-        traverse(first)
-      }
-      if (typeof second === 'string') {
-        rendered.push(second)
-      } else {
-        traverse(second)
-      }
-    }
-    traverse(mosaic, rendered)
-  }
-  return rendered
-}
-
 function renderRemainingButtons(mosaic, onChange) {
   const rendered = getEnabledPanels(mosaic)
   const items = Object.keys(ELEMENT_MAP)
@@ -142,7 +121,6 @@ export default function(props) {
   const { mosaic } = props.state
 
   const dispatchParsers = (mosaic) => {
-    dispatch({ action: 'parsers', payload: getEnabledPanels(mosaic).filter(p => p !== 'elixir') })
     dispatch({ action: 'parse' })
   }
 

@@ -4,7 +4,7 @@ import throttle from 'lodash/throttle'
 import debounce from 'lodash/debounce'
 import 'brace/mode/elixir'
 import 'brace/theme/textmate'
-import { Navbar, Checkbox } from '@blueprintjs/core'
+import { Callout, Checkbox } from '@blueprintjs/core'
 
 export default class extends React.Component {
 
@@ -43,11 +43,10 @@ export default class extends React.Component {
           editorProps={{ $blockScrolling: Infinity }}
         />
         {showOptions
-        ? <Navbar>
-          <Navbar.Group align="right">
-            <Checkbox checked={state.formatter} onChange={e => dispatch({ action: 'formatter', payload: e.target.checked })} label="Auto-format" />
-          </Navbar.Group>
-        </Navbar> : null}
+        ? <Callout>
+          <Checkbox checked={state.formatter} onChange={e => dispatch({ action: 'formatter', payload: e.target.checked })} label="Auto-format" />
+          <Checkbox checked={state.code_is_ast} onChange={e => dispatch({ action: 'code_is_ast', payload: e.target.checked })} label="Source code is the AST" />
+        </Callout> : null}
       </div>
     )
   }
@@ -57,9 +56,19 @@ export default class extends React.Component {
     const { dispatch } = this.props
 
     editor.commands.addCommand({
-      name: "nextLayout",
+      name: "showOptions",
       bindKey: {win: "Ctrl-Alt-o", mac: "Command-Alt-o"},
       exec: () => dispatch({ action: 'showOptions', payload: !this.props.state.showOptions })
+    })
+    editor.commands.addCommand({
+      name: "layoutNext",
+      bindKey: {win: "Ctrl-Alt-n", mac: "Command-Alt-n"},
+      exec: () => dispatch({ action: 'layoutNext' })
+    })
+    editor.commands.addCommand({
+      name: "layoutPrev",
+      bindKey: {win: "Ctrl-Alt-p", mac: "Command-Alt-p"},
+      exec: () => dispatch({ action: 'layoutPrev' })
     })
   }
 

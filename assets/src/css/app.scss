@@ -52,6 +52,9 @@ html, body, #root, #root > div.app {
       font-family: monospace;
       font-size: 14px;
     }
+    code.json {
+      white-space: pre;
+    }
 
     .metadata {
       position: absolute;
@@ -65,15 +68,13 @@ html, body, #root, #root > div.app {
   }
 }
 
-.bp3-navbar {
+.bp3-navbar, .bp3-callout {
   .bp3-control {
     display: inline-block;
     margin-right: 20px;
     margin-bottom: 0;
   }
-}
 
-.bp3-callout {
   ul {
     margin: 0;
     padding: 0;

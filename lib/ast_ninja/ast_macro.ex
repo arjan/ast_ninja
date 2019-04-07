@@ -22,8 +22,8 @@ defmodule AstNinja.AstMacro do
           {:error, "Invalid construct: #{Macro.to_string(node)}"}
         end
 
-        def unquote(name)(_node, e) do
-          e
+        def unquote(name)(node, e) do
+          {node, e}
         end
       end
     ]

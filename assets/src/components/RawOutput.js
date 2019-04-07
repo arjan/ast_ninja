@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import classNames from 'classnames'
 import Ansi from 'ansi-to-react'
-import { Navbar, Callout, Tag, Checkbox, RadioGroup, Radio } from '@blueprintjs/core'
+import { Callout, Tag, Checkbox, RadioGroup, Radio } from '@blueprintjs/core'
 
 import AceEditor from 'react-ace'
 import 'brace/mode/elixir'
@@ -29,7 +29,6 @@ function renderRadios(label, opt, state, name, dispatch) {
   return (
     <RadioGroup
       key={label}
-      label={label}
       inline
       onChange={e => dispatch({ action: 'parserOpt', payload: { name, opt: label, value: e.target.value }})}
       selectedValue={state[label] || opt[0]}
@@ -41,8 +40,7 @@ function renderRadios(label, opt, state, name, dispatch) {
 
 function renderParserOpts(opts, state, name, dispatch) {
   return (
-    <Navbar>
-      <Navbar.Group>
+    <Callout>
       {opts.map(([ label, opt ]) =>
         typeof opt === 'string'
         ? <Checkbox
@@ -53,8 +51,7 @@ function renderParserOpts(opts, state, name, dispatch) {
             onChange={e => dispatch({ action: 'parserOpt', payload: { name, opt, checked: e.target.checked }})}
         /> : renderRadios(label, opt, state, name, dispatch))
       }
-      </Navbar.Group>
-    </Navbar>
+    </Callout>
   )
 }
 
@@ -67,6 +64,7 @@ function renderEditor(code) {
         readOnly
         wrapEnabled
         highlightActiveLine={false}
+        showGutter={false}
         mode="elixir"
         theme="textmate"
         value={code}
@@ -87,7 +85,7 @@ export default function({ state, dispatch, name, isElixir, opts }) {
   if (!error) prev[name] = code
   return (
     <div className={classNames('raw-output', { error })}>
-      {equal ? <Callout icon="tick" intent="success">Output equal to input</Callout> : null}
+      {equal && !state.code_is_ast ? <Callout icon="tick" intent="success">Output equal to input</Callout> : null}
       {error && <div className="error">{error}</div>}
       {warnings && warnings.length && renderWarnings(output) || null}
       <div className="main">

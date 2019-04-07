@@ -30,7 +30,9 @@ export default class extends React.Component {
       <div className="raw-output">
         {output.error && <div className="error">{output.error}</div>}
         {output.warnings && output.warnings.length && this.renderWarnings(output) || null}
-        <code>{JSON.stringify(output.ast, null, 2)}</code>
+        <code className="json">
+          {JSON.stringify(output.ast, null, 2)}
+        </code>
         {output.metadata && this.renderMetadata(output)}
       </div>
     )
