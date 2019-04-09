@@ -1,6 +1,6 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useEffect } from 'react'
 import AppUI from './AppUI'
-import { channel } from '../socket'
+import { joinChannel } from '../socket'
 import { LAYOUTS, prevLayout, nextLayout } from '../layouts'
 import { DEFAULT_CODE } from './CodeSnippetsButton'
 
@@ -28,7 +28,7 @@ export function getEnabledPanels(mosaic) {
 
 function runParsers({ code, formatter, code_is_ast, mosaic, parserOpts }) {
   const parsers = getEnabledPanels(mosaic).filter(p => p !== 'elixir')
-  channel.push('parse', { code, formatter, code_is_ast, parsers, options: parserOpts }).receive('ok', payload => {
+  global.channel.push('parse', { code, formatter, code_is_ast, parsers, options: parserOpts }).receive('ok', payload => {
     global.dispatch({ action: 'parseResult', payload })
     if (payload.formatted) {
       global.dispatch({ action: 'code', payload: payload.formatted, force: code !== payload.formatted })
@@ -75,12 +75,20 @@ const INITIAL_STATE = {
 }
 
 const global = {
-  dispatch: null
+  dispatch: null,
+  channel: null
 }
 
 export default function() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
   global.dispatch = dispatch
+
+  useEffect(() => {
+    joinChannel(channel => {
+      global.channel = channel
+      runParsers(state)
+    })
+  })
 
   return (
     <AppUI state={state} dispatch={dispatch} />
