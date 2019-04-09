@@ -11,6 +11,7 @@ import JsonAST from './JsonAST'
 import HelpDialog from './HelpDialog'
 import CodeSnippetsButton from './CodeSnippetsButton'
 import { getEnabledPanels } from './App'
+import { isMobile } from '../utils'
 
 const REPO_LINK = `https://github.com/arjan/ast_ninja`
 const SLIDES_LINK = `https://docs.google.com/presentation/d/15_xKuL_H4Eu-EkGarxVixCk192858avE1ef1gmcVKoc/edit?usp=sharing`
@@ -155,35 +156,44 @@ export default function(props) {
     )
   }
 
+  const navButtons = <>
+    <Button onClick={() => window.open(SLIDES_LINK)} icon="presentation" text="Presentation slides" minimal />
+    <Button onClick={() => window.open(REPO_LINK)} icon="globe" text="Github" minimal />
+    <Button onClick={() => dispatch({ action: 'help', payload: true })} icon="help" minimal />
+  </>
+
   return (
-    <div className="app">
-      <Navbar className="bp3-dark">
-        <Navbar.Group align="left">
-          <Navbar.Heading>
-            AST Ninja
-          </Navbar.Heading>
-        </Navbar.Group>
-        <Navbar.Group align="right">
-          <Button onClick={() => window.open(SLIDES_LINK)} icon="presentation" text="Presentation slides" minimal />
-          <Button onClick={() => window.open(REPO_LINK)} icon="globe" text="Github" minimal />
-          <Button onClick={() => dispatch({ action: 'help', payload: true })} icon="help" minimal />
+  <div className="app">
+    <Navbar className="bp3-dark">
+      <Navbar.Group align="left">
+        <Navbar.Heading>
+          AST Ninja
+        </Navbar.Heading>
+      </Navbar.Group>
+      <Navbar.Group align="right">
+        {!isMobile() ? <>{navButtons}<Navbar.Divider /></> : null}
 
-          <Navbar.Divider />
-          <Switch
-            checked={props.state.showOptions}
-            label="Show options"
-            onChange={e => dispatch({ action: 'showOptions', payload: e.target.checked })}
-          />
-          {renderRemainingButtons(mosaic, onChange)}
-        </Navbar.Group>
-      </Navbar>
-
-      <Mosaic
-        renderTile={renderTile}
-        onChange={payload => dispatch({ action: 'mosaic', payload })}
-        value={mosaic}
-      />
-      {props.state.help ? <HelpDialog {...props} /> : null}
-    </div>
+        <Switch
+          checked={props.state.showOptions}
+          label="Show options"
+          onChange={e => dispatch({ action: 'showOptions', payload: e.target.checked })}
+        />
+        {renderRemainingButtons(mosaic, onChange)}
+      </Navbar.Group>
+    </Navbar>
+    <Mosaic
+      renderTile={renderTile}
+      onChange={payload => dispatch({ action: 'mosaic', payload })}
+      value={mosaic}
+    />
+    {isMobile() ?
+     <Navbar>
+       <Navbar.Group align="left">
+         {navButtons}
+       </Navbar.Group>
+     </Navbar>
+    : null}
+    {props.state.help ? <HelpDialog {...props} /> : null}
+  </div>
   )
 }

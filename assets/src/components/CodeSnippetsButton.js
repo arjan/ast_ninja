@@ -220,6 +220,8 @@ end
   ['Filter expression #2', 'a == "2" and b == "2"'],
 ]
 
+export const DEFAULT_CODE = SNIPPETS[0][1]
+
 export default class extends React.Component {
   render() {
     const items = SNIPPETS.map(

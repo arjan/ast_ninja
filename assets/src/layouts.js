@@ -1,7 +1,8 @@
+import { isMobile } from 'utils'
 
 function panel(second) {
   return {
-    direction: 'row',
+    direction: isMobile() ? 'column' : 'row',
     first: 'elixir',
     second,
     splitPercentage: 50,

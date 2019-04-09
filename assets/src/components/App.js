@@ -2,6 +2,7 @@ import React, { useReducer } from 'react'
 import AppUI from './AppUI'
 import { channel } from '../socket'
 import { LAYOUTS, prevLayout, nextLayout } from '../layouts'
+import { DEFAULT_CODE } from './CodeSnippetsButton'
 
 export function getEnabledPanels(mosaic) {
   const rendered = []
@@ -63,7 +64,7 @@ function reducer(state, { action, payload, force }) {
 }
 
 const INITIAL_STATE = {
-  code: '',
+  code: DEFAULT_CODE,
   formatter: false,
   code_is_ast: false,
   parseResult: {},
