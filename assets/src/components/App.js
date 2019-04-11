@@ -84,10 +84,12 @@ export default function() {
   global.dispatch = dispatch
 
   useEffect(() => {
-    joinChannel(channel => {
-      global.channel = channel
-      runParsers(state)
-    })
+    if (!global.channel) {
+      joinChannel(channel => {
+        global.channel = channel
+        runParsers(state)
+      })
+    }
   })
 
   return (
