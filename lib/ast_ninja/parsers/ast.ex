@@ -34,11 +34,14 @@ defmodule AstNinja.Parsers.Ast do
         {"existing_atoms", true}, o ->
           [{:existing_atoms_only, true} | o]
 
-        {"safe_atoms", true}, o ->
-          [{:existing_atoms_only, :safe} | o]
-
         {"formatter_metadata", true}, o ->
           [{:formatter_metadata, true} | o]
+
+        {"token_metadata", true}, o ->
+          [{:token_metadata, true} | o]
+
+        {"columns", true}, o ->
+          [{:columns, true} | o]
 
         _, o ->
           o

@@ -23,7 +23,8 @@ function Placeholder() {
 const CODE_OPTS = [
   ['existing_atoms_only: true', 'existing_atoms'],
   ['formatter metadata', 'formatter_metadata'],
-  ['existing_atoms_only: :safe', 'safe_atoms'],
+  ['columns', 'columns'],
+  ['token metadata', 'token_metadata'],
   //  ['Enriched AST', 'rich_ast'],
 ]
 

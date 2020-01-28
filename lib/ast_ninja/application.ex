@@ -6,7 +6,7 @@ defmodule AstNinja.Application do
   use Application
 
   def start(_type, _args) do
-    load_custom_elixir_tokenizer()
+    # load_custom_elixir_tokenizer()
 
     # List all child processes to be supervised
     children = [
