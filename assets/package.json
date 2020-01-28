@@ -16,7 +16,8 @@
     "react": "^16.8.0",
     "react-ace": "^6.3.1",
     "react-dom": "^16.8.0",
-    "react-mosaic-component": "^2.1.0"
+    "react-mosaic-component": "^2.1.0",
+    "serialize-javascript": "^2.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
