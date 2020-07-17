@@ -16,6 +16,7 @@ COPY config config
 
 COPY assets/ assets
 RUN cd assets && npm install && npm run deploy
+RUN mix phx.digest
 
 RUN mix release
 

@@ -1,1 +1,5 @@
+.elixir_ls
+.git
 assets/node_modules
+deps
+_build
