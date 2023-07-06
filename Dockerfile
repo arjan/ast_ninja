@@ -38,7 +38,7 @@
 # _build
 
 # Dependency stage
-FROM hexpm/elixir:1.10.2-erlang-22.3.2-alpine-3.11.3 AS deps
+FROM docker.io/hexpm/elixir:1.14.5-erlang-26.0.1-debian-bullseye-20230522-slim AS deps
 
 # In case you're behind a proxy
 ARG http_proxy

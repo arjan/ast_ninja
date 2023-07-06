@@ -10,10 +10,8 @@ defmodule AstNinja.Application do
 
     # List all child processes to be supervised
     children = [
-      # Start the endpoint when the application starts
+      {Phoenix.PubSub, [name: AstNinja.PubSub]},
       AstNinjaWeb.Endpoint
-      # Starts a worker by calling: AstNinja.Worker.start_link(arg)
-      # {AstNinja.Worker, arg},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

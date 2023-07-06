@@ -5,14 +5,14 @@
 # is restricted to this project.
 
 # General application configuration
-use Mix.Config
+import Config
 
 # Configures the endpoint
 config :ast_ninja, AstNinjaWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "cTgXQ1EHcVlJS01NIcrSuZjBhNNGv/k5rFCV86/xcuUk9RVsow6h48JXUoWfg3rb",
   render_errors: [view: AstNinjaWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: AstNinja.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: AstNinja.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,
