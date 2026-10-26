@@ -5,15 +5,7 @@ defmodule AstNinja.Parsers.Ast do
     opts = gather_options(options)
 
     {result, warnings} =
-      gather_warnings(fn ->
-        case options["rich_ast"] do
-          true ->
-            {:ok, AstNinja.SecretSauce.string_to_quoted(code, opts)}
-
-          _ ->
-            Code.string_to_quoted(code, opts)
-        end
-      end)
+      gather_warnings(fn -> Code.string_to_quoted(code, opts) end)
 
     metadata = %{atom_count: :erlang.system_info(:atom_count)}
 

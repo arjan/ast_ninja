@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <meta name="author" content="Arjan Scherpenisse" />
+    <meta
+      name="description"
+      content="Explore the AST (Abstract Syntax Tree) that the Elixir parser generates"
+    />
+    <meta property="og:image" content={url(~p"/images/og_image.png")} />
+    <script>
+      // Apply the theme before first paint. An explicit choice is kept in
+      // localStorage; without one we follow the OS setting.
+      (() => {
+        const media = window.matchMedia("(prefers-color-scheme: light)")
+        const stored = () => { try { return localStorage.getItem("theme") } catch (_) { return null } }
+        const apply = (theme) => document.documentElement.setAttribute("data-theme", theme)
+        apply(stored() || (media.matches ? "light" : "dark"))
+
+        media.addEventListener("change", (e) => { if (!stored()) apply(e.matches ? "light" : "dark") })
+
+        window.addEventListener("ast:toggle-theme", () => {
+          const next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light"
+          apply(next)
+          try { localStorage.setItem("theme", next) } catch (_) {}
+        })
+      })()
+    </script>
+    <.live_title>AST Ninja</.live_title>
+    <link rel="icon" type="image/png" sizes="192x192" href={~p"/images/favicon.png"} />
+    <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
+    </script>
+  </head>
+  <body class="h-full bg-canvas text-ink antialiased">
+    {@inner_content}
+  </body>
+</html>

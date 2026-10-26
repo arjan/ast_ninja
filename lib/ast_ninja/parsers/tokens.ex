@@ -10,17 +10,11 @@ defmodule AstNinja.Parsers.Tokens do
       end)
 
     case result do
-      {:ok, data} ->
-        %{code: pretty(data), warnings: warnings}
+      {:ok, _line, _column, _warnings, tokens, _terminators} ->
+        %{code: pretty(Enum.reverse(tokens)), warnings: warnings}
 
-      {:error, {_, _, {message, extra}, _}, _, _} = e ->
-        %{error: IO.chardata_to_string([message, extra])}
-
-      {:error, {_, _, message, _}, _, _} ->
-        %{error: IO.chardata_to_string(message)}
-
-      {:error, _} ->
-        %{error: "Tokenize error"}
+      {:error, {_location, message, token}, _rest, _warnings, _tokens} ->
+        %{error: [message, token]}
     end
   end
 

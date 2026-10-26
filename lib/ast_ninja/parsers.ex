@@ -6,33 +6,28 @@ defmodule AstNinja.Parsers do
   end
 
   def mod(parser) when parser in @parsers do
-    Module.concat(__MODULE__, Inflex.camelize(parser))
+    Module.concat(__MODULE__, Macro.camelize(parser))
   end
 
-  @colors [number: :red, atom: :blue, map: :darkgreen, string: :green]
-  @defaults [width: 40, limit: :infinity, pretty: true, syntax_colors: @colors]
+  @defaults [width: 60, limit: :infinity, pretty: true]
   def pretty(data, opts \\ []) do
     inspect(data, Keyword.merge(@defaults, opts))
   end
 
+  @doc """
+  Run `fun`, collecting the warnings the Elixir parser emits while it runs.
+  """
   def gather_warnings(fun) do
-    old = Process.put(:elixir_compiler_pid, self())
+    {result, diagnostics} = Code.with_diagnostics(fun)
 
-    result = fun.()
-    warnings = gather_warnings_loop([])
+    warnings =
+      for %{severity: :warning, message: message} = d <- diagnostics do
+        %{message: message, file: d[:file], line: line(d[:position])}
+      end
 
-    Process.delete(:elixir_compiler_pid)
     {result, warnings}
   end
 
-  def gather_warnings_loop(acc) do
-    receive do
-      {:warning, file, line, message} = w ->
-        message = IO.chardata_to_string(message)
-        gather_warnings_loop([%{message: message, file: file, line: line} | acc])
-    after
-      0 ->
-        acc
-    end
-  end
+  defp line({line, _column}), do: line
+  defp line(line), do: line
 end

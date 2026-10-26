@@ -47,8 +47,17 @@ defmodule AstNinja.Parsers.ToString do
     |> IO.chardata_to_string()
   end
 
-  defp format_ast("secret_sauce", _ast, code) do
-    AstNinja.SecretSauce.string_to_quoted(code)
-    |> AstNinja.SecretSauce.to_string()
+  defp format_ast("with comments", _ast, code) do
+    {:ok, ast, comments} =
+      Code.string_to_quoted_with_comments(code,
+        literal_encoder: &{:ok, {:__block__, &2, [&1]}},
+        token_metadata: true,
+        unescape: false
+      )
+
+    ast
+    |> Code.quoted_to_algebra(comments: comments, escape: false)
+    |> Inspect.Algebra.format(98)
+    |> IO.iodata_to_binary()
   end
 end

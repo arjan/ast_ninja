@@ -7,7 +7,6 @@ defmodule AstNinja.Parsers.JsonAst do
     case result do
       {:ok, ast} ->
         ast = ast_to_json(ast)
-        IO.inspect(ast, label: "ast")
         %{ast: ast, warnings: warnings}
 
       {:error, {_line, message, _}} ->

@@ -23,9 +23,7 @@ defmodule AstNinja.Parsers.FilterDemo do
 
       %{code: IO.chardata_to_string(code)}
     else
-      e ->
-        IO.inspect(e, label: "e")
-
+      _ ->
         %{error: "Filter parse error"}
     end
   end
