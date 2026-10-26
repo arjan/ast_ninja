@@ -38,7 +38,7 @@
 # _build
 
 # Dependency stage
-FROM docker.io/hexpm/elixir:1.14.5-erlang-26.0.1-debian-bullseye-20230522-slim AS deps
+FROM docker.io/hexpm/elixir:1.19.0-erlang-28.1-debian-bookworm-20250929-slim AS deps
 
 # In case you're behind a proxy
 ARG http_proxy
@@ -63,7 +63,7 @@ RUN --mount=type=cache,target=~/.hex/packages/hexpm,sharing=locked \
 # Build Phoenix assets
 # Using stretch for now because it includes Python
 # Otherwise you get errors, could use a smaller image though
-FROM node:13.13.0-stretch AS assets
+FROM node:18.16.1-bullseye AS assets
 WORKDIR /app/assets
 
 COPY --from=deps /app/deps /app/deps/
